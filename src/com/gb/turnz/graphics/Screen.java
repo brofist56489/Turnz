@@ -6,7 +6,7 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
-import com.gb.turnz.base.Game;
+import com.gb.turnz.base.BaseGame;
 
 public class Screen {
 	public static final String WINDOW_TITLE = "Turnz";
@@ -40,6 +40,10 @@ public class Screen {
 		render(img.getPixels(), x, y, img.getWidth(), img.getHeight(), flip);
 	}
 	
+	public static void render(Image img, int xp, int yp, double rad) {
+		render(img.getPixels(), xp, yp, img.getWidth(), img.getHeight(), rad);
+	}
+	
 	public static void render(int[] pixels, int x, int y, int w, int h, int flip) {
 		x -= xo;
 		y -= yo;
@@ -71,11 +75,44 @@ public class Screen {
 		}
 	}
 	
+	public static void render(int[] pixels, int xp, int yp, int w, int h, double rot) {
+		xp -= xo;
+		yp -= yo;
+		
+		double sin = Math.sin(rot);
+		double cos = Math.cos(rot);
+
+		int x, y, fromX, fromY, toX, toY;
+		int x2, y2;
+		for(y=0; y<h; y++) {
+			for(x=0; x<w; x++) {
+				toX = (w / 2) - x;
+				toY = (h / 2) - y;
+				fromX = (int) ((cos * toX) - (sin * toY));
+				fromY= (int) ((sin * toX) + (cos * toY));
+				fromX += (w/ 2);
+				fromY += (h / 2);
+				
+				x2 = x + xp;
+				y2 = y + yp;
+				if(x2 < 0 || y2 < 0 || x2 >= WIDTH || y2 >= HEIGHT) {
+					continue;
+				} else if(fromX < 0 || fromY < 0 || fromX >= w || fromY >= h) {
+					continue;
+				} else if (pixels[x + y * w] == COLOR_KEY) {
+					continue;
+				} else {
+					Screen.pixels[x2 + y2 * WIDTH] = pixels[fromX + fromY * w];
+				}
+			}
+		}
+	}
+	
 	public static BufferedImage getImage() {
 		return destImage;
 	}
 	
-	public static void makeJFrame(Game game) {
+	public static void makeJFrame(BaseGame game) {
 		frame = new JFrame(WINDOW_TITLE);
 		frame.setMinimumSize(new Dimension(WIDTH, HEIGHT));
 		frame.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));

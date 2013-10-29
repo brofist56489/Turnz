@@ -7,15 +7,17 @@ import java.awt.image.BufferStrategy;
 import com.gb.turnz.graphics.Image;
 import com.gb.turnz.graphics.Screen;
 
-public class Game extends Canvas implements Runnable {
+public class BaseGame extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
 	
 	private Thread gameThread;
 	private boolean running = false;
 	
 	Image testImage;
+	
+	private double rot = 0.0;
 
-	public Game() {
+	public BaseGame() {
 		Screen.initialize();
 		testImage = new Image("/textures/testImage.png");
 	}
@@ -45,12 +47,13 @@ public class Game extends Canvas implements Runnable {
 			now = System.nanoTime();
 			delta += (now - lt) / nsPt;
 			lt = now;
-			shouldRender = true;
+			shouldRender = false;
 			
 			while(delta >= 1) {
 				tick();
 				ticks++;
 				delta--;
+				shouldRender = true;
 			}
 			
 			if(shouldRender) {
@@ -67,7 +70,8 @@ public class Game extends Canvas implements Runnable {
 	}
 	
 	public void tick() {
-		
+		rot += 0.01;
+		while(rot >= Math.PI * 2) rot -= Math.PI * 2;
 	}
 	
 	public void render() {
@@ -78,7 +82,7 @@ public class Game extends Canvas implements Runnable {
 		}
 		Screen.clear(0xff0000);
 		
-		Screen.render(testImage, 0, 0, 0);
+		Screen.render(testImage, 0, 0, rot);
 		
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(Screen.getImage(), 0, 0, getWidth(), getHeight(), null);
