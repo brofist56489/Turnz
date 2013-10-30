@@ -3,6 +3,8 @@ package com.gb.turnz.graphics;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 
@@ -11,28 +13,35 @@ import com.gb.turnz.base.BaseGame;
 public class Screen {
 	public static final String WINDOW_TITLE = "Turnz";
 	
-	public static final int WIDTH = 400;
-	public static final int HEIGHT = 300;
-	public static final int SCALE = 3;
+	public static final int WIDTH = 300;
+	public static final int HEIGHT = 250;
+	public static final int SCALE = 2;
 	
 	private static JFrame frame;
 	
 	private static final int COLOR_KEY = 0x7f007f;
 	
+	private static List<Light> lights;
+	
 	private static int xo = 0;
 	private static int yo = 0;
 	
 	private static int[] pixels;
+	private static int[] lighting;
 	private static BufferedImage destImage;
 	
 	public static void initialize() {
 		destImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		pixels = ((DataBufferInt)destImage.getRaster().getDataBuffer()).getData();
+		
+		lights = new ArrayList<Light>();
+		lighting = new int[WIDTH * HEIGHT];
 	}
 	
-	public static void clear(int clearColor) {
+	public static void clear(int clearColor, int lightLevel) {
 		for(int i=0; i < WIDTH * HEIGHT; i++) {
 			pixels[i] = clearColor;
+			lighting[i] = lightLevel;
 		}
 	}
 	
@@ -108,8 +117,51 @@ public class Screen {
 		}
 	}
 	
+	
+	@SuppressWarnings("unused")
+	private static int applyLighting(int c, int x, int y) {
+		return applyLighting(c, lighting[x + y * WIDTH]);
+	}
+	
+	private static int applyLighting(int c, int brightness) {
+		if(brightness >= 255) return c;
+		
+		int r = (c >> 16) & 0xff;
+		int g = (c >> 8) & 0xff;
+		int b = c & 0xff;
+		
+		r = r * brightness / 255;
+		b = b * brightness / 255;
+		g = g * brightness / 255;
+		
+		c = r << 16 | g << 8 | b;
+		return c;
+	}
+	
+	public static void addLight(Light l) {
+		lights.add(l);
+	}
+	
+	public static void finalizeLighting() {
+		for(Light l : lights) {
+			l.apply(lighting);
+		}
+		
+		for(int i=0; i<WIDTH*HEIGHT; i++){
+			pixels[i] = applyLighting(pixels[i], lighting[i]);
+		}
+	}
+	
 	public static BufferedImage getImage() {
 		return destImage;
+	}
+	
+	public static int getXoff() {
+		return xo;
+	}
+	
+	public static int getYoff() {
+		return yo;
 	}
 	
 	public static void makeJFrame(BaseGame game) {

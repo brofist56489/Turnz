@@ -22,12 +22,12 @@ public class Image {
 		height = loadedImage.getHeight();
 		
 		pixels = loadedImage.getRGB(0, 0, width, height, null, 0, width);
-		pixels = new int[100];
-		for(int i = 0; i < 100; i++) {
+		pixels = new int[1000];
+		for(int i = 0; i < 1000; i++) {
 			pixels[i] = 0xff;
 		}
-		width = 10;
-		height = 10;
+		width = 50;
+		height = 20;
 	}
 	
 	public int[] getPixels() {

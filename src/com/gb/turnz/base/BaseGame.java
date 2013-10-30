@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 
 import com.gb.turnz.graphics.Image;
+import com.gb.turnz.graphics.Light;
 import com.gb.turnz.graphics.Screen;
 
 public class BaseGame extends Canvas implements Runnable {
@@ -16,9 +17,12 @@ public class BaseGame extends Canvas implements Runnable {
 	Image testImage;
 	
 	private double rot = 0.0;
+	private Light light;
 
 	public BaseGame() {
 		Screen.initialize();
+		light = new Light(0, 0, 50, 255);
+		Screen.addLight(light);
 		testImage = new Image("/textures/testImage.png");
 	}
 	
@@ -72,6 +76,8 @@ public class BaseGame extends Canvas implements Runnable {
 	public void tick() {
 		rot += 0.01;
 		while(rot >= Math.PI * 2) rot -= Math.PI * 2;
+		
+		light.moveTo((int)(Math.cos(rot) * 50) + 150, (int)(Math.sin(rot) * 50) + 125);
 	}
 	
 	public void render() {
@@ -80,10 +86,11 @@ public class BaseGame extends Canvas implements Runnable {
 			createBufferStrategy(3);
 			return;
 		}
-		Screen.clear(0xff0000);
+		Screen.clear(0xff0000, 0);
 		
-		Screen.render(testImage, 0, 0, rot);
+		Screen.render(testImage, 150, 125, rot);
 		
+		Screen.finalizeLighting();
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(Screen.getImage(), 0, 0, getWidth(), getHeight(), null);
 		g.dispose();
