@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -17,9 +18,15 @@ public class Screen {
 	public static final int HEIGHT = 250;
 	public static final int SCALE = 2;
 	
+	public static final int TRUE = 0x01;
+	public static final int FALSE = 0x00;
+	
+	public static final int LIGHTING = 0x100;
+	public static final int TRANSPARENT_COLOR = 0x200;
+	
 	private static JFrame frame;
 	
-	private static final int COLOR_KEY = 0x7f007f;
+	private static HashMap<Integer, Integer> properties;
 	
 	private static List<Light> lights;
 	
@@ -31,11 +38,19 @@ public class Screen {
 	private static BufferedImage destImage;
 	
 	public static void initialize() {
+		properties = new HashMap<Integer, Integer>();
+		initProperties();
+		
 		destImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		pixels = ((DataBufferInt)destImage.getRaster().getDataBuffer()).getData();
 		
 		lights = new ArrayList<Light>();
 		lighting = new int[WIDTH * HEIGHT];
+	}
+	
+	private static void initProperties() {
+		properties.put(LIGHTING, TRUE);
+		properties.put(TRANSPARENT_COLOR, 0x7f007f);
 	}
 	
 	public static void clear(int clearColor, int lightLevel) {
@@ -46,19 +61,21 @@ public class Screen {
 	}
 	
 	public static void render(Image img, int x, int y, int flip) {
-		render(img.getPixels(), x, y, img.getWidth(), img.getHeight(), flip);
+		render(img.getPixels(), x, y, img.getWidth(), img.getHeight(), flip, true);
 	}
 	
 	public static void render(Image img, int xp, int yp, double rad) {
-		render(img.getPixels(), xp, yp, img.getWidth(), img.getHeight(), rad);
+		render(img.getPixels(), xp, yp, img.getWidth(), img.getHeight(), rad, true);
 	}
 	
-	public static void render(int[] pixels, int x, int y, int w, int h, int flip) {
+	public static void render(int[] pixels, int x, int y, int w, int h, int flip, boolean light) {
 		x -= xo;
 		y -= yo;
 
 		boolean flipx = (flip & 0x01) == 0x01;
 		boolean flipy = (flip & 0x02) == 0x02;
+		
+		int COLOR_KEY = properties.get(TRANSPARENT_COLOR);
 		
 		int ys, xs, col;
 		for(int yy = 0; yy < h; yy++) {
@@ -84,13 +101,15 @@ public class Screen {
 		}
 	}
 	
-	public static void render(int[] pixels, int xp, int yp, int w, int h, double rot) {
+	public static void render(int[] pixels, int xp, int yp, int w, int h, double rot, boolean light) {
 		xp -= xo;
 		yp -= yo;
 		
 		double sin = Math.sin(rot);
 		double cos = Math.cos(rot);
 
+		int COLOR_KEY = properties.get(TRANSPARENT_COLOR);
+		
 		int x, y, fromX, fromY, toX, toY;
 		int x2, y2;
 		for(y=0; y<h; y++) {
@@ -143,6 +162,8 @@ public class Screen {
 	}
 	
 	public static void finalizeLighting() {
+		if(properties.get(LIGHTING) != TRUE) return;
+		
 		for(Light l : lights) {
 			l.apply(lighting);
 		}
@@ -162,6 +183,14 @@ public class Screen {
 	
 	public static int getYoff() {
 		return yo;
+	}
+	
+	public static void setProperty(int property, int value) {
+		properties.put(property, value);
+	}
+	
+	public static int getProperty(int property) {
+		return properties.get(property);
 	}
 	
 	public static void makeJFrame(BaseGame game) {

@@ -3,27 +3,29 @@ package com.gb.turnz.base;
 import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import com.gb.turnz.graphics.Image;
 import com.gb.turnz.graphics.Light;
 import com.gb.turnz.graphics.Screen;
 
 public class BaseGame extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
 	
+	private int ticksPerSecond = 60;
+	private boolean lockedFps = false;
+	
 	private Thread gameThread;
 	private boolean running = false;
 	
-	Image testImage;
+	private Logger logger;
 	
-	private double rot = 0.0;
-	private Light light;
-
-	public BaseGame() {
+	public void init() {
+		logger = Logger.getLogger(BaseGame.class.getName());
+		logger.setLevel(Level.ALL);
+		
 		Screen.initialize();
-		light = new Light(0, 0, 50, 255);
-		Screen.addLight(light);
-		testImage = new Image("/textures/testImage.png");
+		Screen.setProperty(Screen.LIGHTING, Screen.TRUE);
 	}
 	
 	public synchronized void start() {
@@ -39,8 +41,10 @@ public class BaseGame extends Canvas implements Runnable {
 	}
 	
 	public void run() {
+		init();
+		
 		long lt = System.nanoTime();
-		double nsPt = 1000000000.0/60.0;
+		double nsPt = 1000000000.0/ticksPerSecond;
 		double delta = 0.0;
 		long ltr = System.currentTimeMillis();
 		long now;
@@ -51,7 +55,7 @@ public class BaseGame extends Canvas implements Runnable {
 			now = System.nanoTime();
 			delta += (now - lt) / nsPt;
 			lt = now;
-			shouldRender = false;
+			shouldRender = lockedFps;
 			
 			while(delta >= 1) {
 				tick();
@@ -67,17 +71,14 @@ public class BaseGame extends Canvas implements Runnable {
 			
 			if(System.currentTimeMillis() - ltr >= 1000) {
 				ltr += 1000;
-				System.out.println(ticks + " tps, " + frames + " fps");
+				logger.log(Level.INFO, ticks + " tps, " + frames + " fps");
 				ticks = frames = 0;
 			}
 		}
 	}
 	
 	public void tick() {
-		rot += 0.01;
-		while(rot >= Math.PI * 2) rot -= Math.PI * 2;
 		
-		light.moveTo((int)(Math.cos(rot) * 50) + 150, (int)(Math.sin(rot) * 50) + 125);
 	}
 	
 	public void render() {
@@ -86,14 +87,16 @@ public class BaseGame extends Canvas implements Runnable {
 			createBufferStrategy(3);
 			return;
 		}
-		Screen.clear(0xff0000, 0);
-		
-		Screen.render(testImage, 150, 125, rot);
+		Screen.clear(0xff00ff, 100);
 		
 		Screen.finalizeLighting();
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(Screen.getImage(), 0, 0, getWidth(), getHeight(), null);
 		g.dispose();
 		bs.show();
+	}
+	
+	public Logger getLogger() {
+		return logger;
 	}
 }
