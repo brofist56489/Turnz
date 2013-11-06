@@ -26,6 +26,7 @@ public class BaseGame extends Canvas implements Runnable {
 		
 		Screen.initialize();
 		Screen.setProperty(Screen.LIGHTING, Screen.TRUE);
+		Screen.addLight(new Light(150, 150, 100, 255));
 	}
 	
 	public synchronized void start() {
@@ -84,7 +85,7 @@ public class BaseGame extends Canvas implements Runnable {
 	public void render() {
 		BufferStrategy bs = getBufferStrategy();
 		if(bs == null) {
-			createBufferStrategy(3);
+			createBufferStrategy(2);
 			return;
 		}
 		Screen.clear(0xff00ff, 100);
