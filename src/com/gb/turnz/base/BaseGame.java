@@ -18,7 +18,7 @@ public class BaseGame extends Canvas implements Runnable {
 	private Thread gameThread;
 	private boolean running = false;
 	
-	private Logger logger;
+	private static Logger logger;
 	
 	public void init() {
 		logger = Logger.getLogger(BaseGame.class.getName());
@@ -97,7 +97,7 @@ public class BaseGame extends Canvas implements Runnable {
 		bs.show();
 	}
 	
-	public Logger getLogger() {
+	public static Logger getLogger() {
 		return logger;
 	}
 }

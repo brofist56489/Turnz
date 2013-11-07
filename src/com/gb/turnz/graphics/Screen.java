@@ -101,6 +101,23 @@ public class Screen {
 		}
 	}
 	
+	public static void renderRect(int xp, int yp, int w, int h, int color, boolean light) {
+		xp -= xo;
+		yp -= yo;
+		
+		int xs, ys;
+		for(int y=0; y<h; y++) {
+			ys = y + yp;
+			if(ys < 0 || ys >= HEIGHT) continue;
+			for(int x=0; x<w; x++) {
+				xs = x + xp;
+				if(xs < 0 || xs >= WIDTH) continue;
+				
+				pixels[xs + ys * WIDTH] = color;
+			}
+		}
+	}
+	
 	public static void render(int[] pixels, int xp, int yp, int w, int h, double rot, boolean light) {
 		xp -= xo;
 		yp -= yo;
