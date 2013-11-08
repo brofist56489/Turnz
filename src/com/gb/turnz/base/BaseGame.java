@@ -22,7 +22,7 @@ public class BaseGame extends Canvas implements Runnable {
 	
 	public void init() {
 		logger = Logger.getLogger(BaseGame.class.getName());
-		logger.setLevel(Level.ALL);
+		logger.setLevel(Level.WARNING);
 		
 		Screen.initialize();
 		Screen.setProperty(Screen.LIGHTING, Screen.TRUE);
