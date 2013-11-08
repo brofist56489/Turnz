@@ -15,6 +15,10 @@ public abstract class MenuObject {
 		this.height = h;
 	}
 	
+	public void onClick() {
+		
+	}
+	
 	public void render() {
 		Screen.renderRect(x, y, width, height, color, true);
 	}

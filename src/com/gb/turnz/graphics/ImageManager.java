@@ -31,4 +31,14 @@ public class ImageManager {
 		Image i = getImage(name);
 		Screen.render(i, x, y, rad);
 	}
+	
+	public static void renderFromImage(String name, int x, int y, int tileId, int tileWidth, int flip) {
+		Image i = getImage(name);
+		Screen.renderFromImage(i, x, y, tileId, tileWidth, flip, true);
+	}
+	
+	public static void renderFromImage(String name, int x, int y, int tileId, int tileWidth, int flip, double rotation) {
+		Image i = getImage(name);
+		Screen.renderFromImage(i, x, y, tileId, tileWidth, flip, rotation, true);
+	}
 }

@@ -134,7 +134,7 @@ public class Screen {
 				toX = (w / 2) - x;
 				toY = (h / 2) - y;
 				fromX = (int) ((cos * toX) - (sin * toY));
-				fromY= (int) ((sin * toX) + (cos * toY));
+				fromY = (int) ((sin * toX) + (cos * toY));
 				fromX += (w/ 2);
 				fromY += (h / 2);
 				
@@ -149,6 +149,97 @@ public class Screen {
 				} else {
 					Screen.pixels[x2 + y2 * WIDTH] = pixels[fromX + fromY * w];
 				}
+			}
+		}
+	}
+	
+	public static void renderFromImage(Image i, int xp, int yp, int tileId, int tileWidth, int flip, boolean light) {
+		xp -= xo;
+		yp -= yo;
+
+		int COLOR_KEY = properties.get(TRANSPARENT_COLOR);
+		
+		boolean flipx = (flip & 0x01) == 0x01;
+		boolean flipy = (flip & 0x02) == 0x02;
+
+		int tw = i.getWidth() / tileWidth;
+		int xt = tileId % tw;
+		int yt = tileId / tw;
+		int tileOffset = xt * tileWidth + yt * tileWidth * i.getWidth();
+
+		for (int y = 0; y < tileWidth; y++) {
+			if ((y + yp) < 0 || (y + yp) >= HEIGHT)
+				continue;
+			int ys = y;
+			if (flipy)
+				ys = (tileWidth - 1) - y;
+
+			for (int x = 0; x < tileWidth; x++) {
+				if ((x + xp) < 0 || (x + xp) >= WIDTH)
+					continue;
+				int xs = x;
+				if (flipx)
+					xs = (tileWidth - 1) - x;
+
+				int c = i.getPixels()[xs + (ys * i.getWidth()) + tileOffset];
+				if (c == COLOR_KEY)
+					continue;
+				
+				pixels[(x + xp) + (y + yp) * WIDTH] = c;
+			}
+		}
+	}
+	
+	public static void renderFromImage(Image i, int xp, int yp, int tileId, int tileWidth, int flip, double rot, boolean light) {
+		xp -= xo;
+		yp -= yo;
+
+		int COLOR_KEY = properties.get(TRANSPARENT_COLOR);
+		
+		boolean flipx = (flip & 0x01) == 0x01;
+		boolean flipy = (flip & 0x02) == 0x02;
+		
+		double sin = Math.sin(rot);
+		double cos = Math.cos(rot);
+
+		int tw = i.getWidth() / tileWidth;
+		int xt = tileId % tw;
+		int yt = tileId / tw;
+		int tileOffset = xt * tileWidth + yt * tileWidth * i.getWidth();
+
+		int fromX, fromY, toX, toY, x2, y2;
+		for (int y = 0; y < tileWidth; y++) {
+			int ys = y;
+			
+			for (int x = 0; x < tileWidth; x++) {
+				int xs = x;
+
+				toX = (tileWidth / 2) - xs;
+				toY = (tileWidth / 2) - ys;
+				fromX = (int) (cos * toX - sin * toY);
+				fromY = (int) (sin * toX + cos * toY);
+				fromX += (tileWidth / 2);
+				fromY += (tileWidth / 2);
+				
+				x2 = x + xp;
+				y2 = y + yp;
+
+				if (flipy)
+					fromY = (tileWidth - 1) - fromY;
+				if (flipx)
+					fromX = (tileWidth - 1) - fromX;
+				
+				if(x2 < 0 || y2 < 0 || x2 >= WIDTH || y2 >= HEIGHT) {
+					continue;
+				} else if(fromX < 0 || fromY < 0 || fromX >= tileWidth || fromY >= tileWidth) {
+					continue;
+				}
+				
+				int c = i.getPixels()[fromX + (fromY * i.getWidth()) + tileOffset];
+				if (c == COLOR_KEY)
+					continue;
+				
+				pixels[x2 + y2 * WIDTH] = c;
 			}
 		}
 	}

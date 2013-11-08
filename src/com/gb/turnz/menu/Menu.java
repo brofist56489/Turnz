@@ -24,6 +24,10 @@ public abstract class Menu {
 		
 	}
 	
+	public void onClick() {
+		
+	}
+	
 	public void render() {
 		for(int i=0; i<objects.size(); i++) {
 			objects.get(i).render();
