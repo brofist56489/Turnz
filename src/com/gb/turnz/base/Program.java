@@ -1,13 +1,10 @@
-package com.gb.turnz;
+package com.gb.turnz.base;
 
-import com.gb.turnz.base.BaseGame;
 import com.gb.turnz.graphics.Screen;
 
-/** Main entry point of the game */
 public class Program {
-
 	public static void main(String[] args) {
-		BaseGame game = new BaseGame();
+		Game game = new Game();
 		Screen.makeJFrame(game);
 		game.start();
 	}

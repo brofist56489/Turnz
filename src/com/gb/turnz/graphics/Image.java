@@ -30,6 +30,50 @@ public class Image {
 		}
 	}
 	
+	public Image(int[] pixels, int w, int h) {
+		this.pixels = pixels;
+		this.width = w;
+		this.height = h;
+		this.loadedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+		loadedImage.setRGB(0, 0, w, h, pixels, w, 0);
+	}
+	
+	public Image(int w, int h) {
+		this.width = w;
+		this.height = h;
+		this.pixels = new int[w * h];
+		this.loadedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+	}
+	
+	/**
+	 * @return a brand new image
+	 */
+	public Image scale(double scale) {
+		Image i = new Image((int)(width * scale), (int)(height * scale));
+		for(int x = 0; x < i.width; x++) {
+			for(int y = 0; y < i.height; y++) {
+				i.pixels[x + y * i.width] = pixels[(int)((int)(x / scale) + (int)(y / scale) * width)];
+			}
+		}
+		return i;
+	}
+	
+	/**
+	 * @param scale
+	 * Alters the image
+	 */
+	public void resize(double scale) {
+		width *= scale;
+		height *= scale;
+		int[] newPixels = new int[width * height];
+		for(int x = 0; x < width; x++) {
+			for(int y = 0; y < height; y++) {
+				newPixels[x + y * width] = pixels[(int)((int)(x / scale) + (int)(y / scale) * (int)(width / scale))];
+			}
+		}
+		pixels = newPixels;
+	}
+	
 	public int[] getPixels() {
 		return pixels;
 	}
