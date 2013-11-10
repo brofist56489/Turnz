@@ -46,6 +46,7 @@ public class Screen {
 
 		lights = new ArrayList<Light>();
 		lighting = new int[WIDTH * HEIGHT];
+		ImageManager.addImage("/textures/cb.png", "icon");
 	}
 
 	private static void initProperties() {
@@ -59,6 +60,14 @@ public class Screen {
 			lighting[i] = lightLevel;
 		}
 	}
+	
+	public static void fade(int fade) {
+		for(int y=0; y<HEIGHT; y++) {
+			for(int x=0; x<WIDTH; x++) {
+				pixels[x + y * WIDTH] = applyLighting(pixels[x + y * WIDTH], fade);
+			}
+		}
+	}
 
 	public static void render(Image img, int x, int y, int flip) {
 		render(img.getPixels(), x, y, img.getWidth(), img.getHeight(), flip);
@@ -69,7 +78,7 @@ public class Screen {
 	}
 	
 	public static void renderScaled(Image img, int xp, int yp, double scale) {
-		render(img.scale(scale), xp, yp, 0);
+		render(img.getScaledImage(scale), xp, yp, 0);
 	}
 
 	public static void render(int[] pixels, int x, int y, int w, int h, int flip) {
@@ -108,6 +117,9 @@ public class Screen {
 	}
 
 	public static void renderRect(int xp, int yp, int w, int h, int color) {
+		if(color == properties.get(TRANSPARENT_COLOR)) {
+			return;
+		}
 		xp -= xOff;
 		yp -= yOff;
 
@@ -130,32 +142,34 @@ public class Screen {
 		xp -= xOff;
 		yp -= yOff;
 
-		double sin = Math.sin(rot);
-		double cos = Math.cos(rot);
+		float sin = (float) Math.sin(rot);
+		float cos = (float) Math.cos(rot);
 
 		int COLOR_KEY = properties.get(TRANSPARENT_COLOR);
 
-		int x, y, fromX, fromY, toX, toY;
-		int x2, y2;
+		int x, y;
+		float fromX, fromY, toX, toY;
+		float x2, y2;
 		for (y = 0; y < h; y++) {
 			for (x = 0; x < w; x++) {
+				
 				toX = (w / 2) - x;
 				toY = (h / 2) - y;
-				fromX = (int) ((cos * toX) - (sin * toY));
-				fromY = (int) ((sin * toX) + (cos * toY));
+				fromX = (cos * toX) - (sin * toY);
+				fromY = (sin * toX) + (cos * toY);
 				fromX += (w / 2);
 				fromY += (h / 2);
 
-				x2 = x + xp;
-				y2 = y + yp;
+				x2 = fromX + xp;
+				y2 = fromY + yp;
 				if (x2 < 0 || y2 < 0 || x2 >= WIDTH || y2 >= HEIGHT) {
 					continue;
-				} else if (fromX < 0 || fromY < 0 || fromX >= w || fromY >= h) {
+				} else if (x < 0 || y < 0 || x >= w || y >= h) {
 					continue;
 				} else if (pixels[x + y * w] == COLOR_KEY) {
 					continue;
 				} else {
-					Screen.pixels[x2 + y2 * WIDTH] = pixels[fromX + fromY * w];
+					Screen.pixels[(int)x2 + (int)y2 * WIDTH] = pixels[x + y * w];
 				}
 			}
 		}
@@ -199,6 +213,9 @@ public class Screen {
 	}
 
 	public static void renderFromTileMap(Image i, int xp, int yp, int tileId, int tileWidth, int flip, double rot) {
+		if(rot == 0) {
+			renderFromTileMap(i, xp, yp, tileId, tileWidth, flip);
+		}
 		xp -= xOff;
 		yp -= yOff;
 
@@ -207,55 +224,57 @@ public class Screen {
 		boolean flipx = (flip & 0x01) == 0x01;
 		boolean flipy = (flip & 0x02) == 0x02;
 
-		double sin = Math.sin(rot);
-		double cos = Math.cos(rot);
+		rot *= -1;
+		rot -= Math.PI / 2;
+		
+		float sin = (float) Math.sin(rot);
+		float cos = (float) Math.cos(rot);
 
 		int tw = i.getWidth() / tileWidth;
 		int xt = tileId % tw;
 		int yt = tileId / tw;
 		int tileOffset = xt * tileWidth + yt * tileWidth * i.getWidth();
 
-		int fromX, fromY, toX, toY, x2, y2;
+		float fromX, fromY, toX, toY, x2, y2;
 		for (int y = 0; y < tileWidth; y++) {
 			int ys = y;
 
 			for (int x = 0; x < tileWidth; x++) {
 				int xs = x;
 
-				toX = (tileWidth / 2) - xs;
-				toY = (tileWidth / 2) - ys;
-				fromX = (int) (cos * toX - sin * toY);
-				fromY = (int) (sin * toX + cos * toY);
+				toX = (tileWidth / 2) - x;
+				toY = (tileWidth / 2) - y;
+				fromX = (cos * toX - sin * toY);
+				fromY = (sin * toX + cos * toY);
 				fromX += (tileWidth / 2);
 				fromY += (tileWidth / 2);
 
-				x2 = x + xp;
-				y2 = y + yp;
+				x2 = fromX + xp;
+				y2 = fromY + yp;
 
 				if (flipy)
-					fromY = (tileWidth - 1) - fromY;
+					ys = (tileWidth - 1) - ys;
 				if (flipx)
-					fromX = (tileWidth - 1) - fromX;
+					xs = (tileWidth - 1) - xs;
 
 				if (x2 < 0 || y2 < 0 || x2 >= WIDTH || y2 >= HEIGHT) {
 					continue;
-				} else if (fromX < 0 || fromY < 0 || fromX >= tileWidth || fromY >= tileWidth) {
+				} else if (xs < 0 || ys < 0 || xs >= tileWidth || ys >= tileWidth) {
 					continue;
 				}
 
-				int c = i.getPixels()[fromX + (fromY * i.getWidth()) + tileOffset];
+				int c = i.getPixels()[xs + (ys * i.getWidth()) + tileOffset];
 				if (c == COLOR_KEY)
 					continue;
 
-				pixels[x2 + y2 * WIDTH] = c;
+				pixels[(int)x2 + (int)y2 * WIDTH] = c;
 			}
 		}
 	}
 
-	// @SuppressWarnings("unused")
-	// private static int applyLighting(int c, int x, int y) {
-	// return applyLighting(c, lighting[x + y * WIDTH]);
-	// }
+//	private static int applyLighting(int c, int x, int y) {
+//		return applyLighting(c, lighting[x + y * WIDTH]);
+//	}
 
 	private static int applyLighting(int color, int brightness) {
 		if (brightness >= 255)
@@ -289,6 +308,11 @@ public class Screen {
 			pixels[i] = applyLighting(pixels[i], lighting[i]);
 		}
 	}
+	
+	public static void setOffset(int x, int y) {
+		xOff = x;
+		yOff = y;
+	}
 
 	public static BufferedImage getImage() {
 		return destImage;
@@ -320,6 +344,7 @@ public class Screen {
 //			frame.setShape(new RoundRectangle2D.Double(0, 0, WIDTH * SCALE, HEIGHT * SCALE, 25, 25));
 //		}
 		frame.add(game);
+		frame.setIconImage(ImageManager.getImage("icon").getBufferedImage());
 		frame.pack();
 		frame.setVisible(true);
 	}

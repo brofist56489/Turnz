@@ -32,13 +32,17 @@ public class ImageManager {
 		Screen.render(i, x, y, rad);
 	}
 	
-	public static void renderFromImage(String name, int x, int y, int tileId, int tileWidth, int flip) {
+	public static void renderFromTileMap(String name, int x, int y, int tileId, int tileWidth, int flip) {
 		Image i = getImage(name);
 		Screen.renderFromTileMap(i, x, y, tileId, tileWidth, flip);
 	}
 	
-	public static void renderFromImage(String name, int x, int y, int tileId, int tileWidth, int flip, double rotation) {
+	public static void renderFromTileMap(String name, int x, int y, int tileId, int tileWidth, int flip, double rotation) {
 		Image i = getImage(name);
 		Screen.renderFromTileMap(i, x, y, tileId, tileWidth, flip, rotation);
+	}
+	
+	public static void setImage(String name, Image img) {
+		images.put(name, img);
 	}
 }

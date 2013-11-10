@@ -48,7 +48,7 @@ public class Image {
 	/**
 	 * @return a brand new image
 	 */
-	public Image scale(double scale) {
+	public Image getScaledImage(double scale) {
 		Image i = new Image((int)(width * scale), (int)(height * scale));
 		for(int x = 0; x < i.width; x++) {
 			for(int y = 0; y < i.height; y++) {
@@ -56,6 +56,22 @@ public class Image {
 			}
 		}
 		return i;
+	}
+	
+	public Image getScaledImage(double xScale, double yScale) {
+		Image i = new Image((int)(width * xScale), (int)(height * yScale));
+		for(int x = 0; x < i.width; x++) {
+			for(int y = 0; y < i.height; y++) {
+				i.pixels[x + y * i.width] = pixels[(int)((int)(x / xScale) + (int)(y / yScale) * width)]; 
+			}
+		}
+		return i;
+	}
+	
+	public Image getScaledImage(int w, int h) {
+		double xScale = (float) w / width;
+		double yScale = (float) h / height;
+		return getScaledImage(xScale, yScale);
 	}
 	
 	/**
@@ -74,6 +90,24 @@ public class Image {
 		pixels = newPixels;
 	}
 	
+	public void resize(double xScale, double yScale) {
+		width *= xScale;
+		height *= yScale;
+		int[] newPixels = new int[width * height];
+		for(int x = 0; x < width; x++) {
+			for(int y = 0; y < height; y++) {
+				newPixels[x + y * width] = pixels[(int)((int)(x / xScale) + (int)(y / yScale) * (int) (width / xScale))];
+			}
+		}
+		pixels = newPixels;
+	}
+	
+	public void resize(int w, int h) {
+		double xScale = w / (float)width;
+		double yScale = h / (float)height;
+		resize(xScale, yScale);
+	}
+	
 	public int[] getPixels() {
 		return pixels;
 	}
@@ -88,5 +122,9 @@ public class Image {
 	
 	public int getHeight() {
 		return height;
+	}
+	
+	public BufferedImage getBufferedImage() {
+		return loadedImage;
 	}
 }
