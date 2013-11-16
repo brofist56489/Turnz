@@ -35,7 +35,7 @@ public class PauseMenu extends Menu {
 		});
 		addObject(new MenuObject.Button(Font.getScreenCenterX("Quit"), 300, "Quit", 0x7f007f) {
 			public void onClick() {
-				System.exit(1);
+				Game.setMenu(new MainMenu(menu));
 			}
 			public void onNotHover() {
 				color = 0x7f007f;
@@ -45,7 +45,7 @@ public class PauseMenu extends Menu {
 	
 	public void render() {
 		Game.getWorld().render();
-		Screen.fade(128);
+		Screen.fade(100);
 		
 		super.render();
 	}

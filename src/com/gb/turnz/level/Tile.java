@@ -16,7 +16,8 @@ public class Tile {
 	protected boolean solid;
 	protected int textId;
 	protected int id;
-	protected int data;
+	protected int data1;
+	protected int data2;
 	
 	public static Tile newTile(Tiles tileType) {
 		if(tileType.isConnected()) {

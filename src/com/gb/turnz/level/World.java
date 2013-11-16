@@ -9,16 +9,16 @@ import com.gb.turnz.level.Tile.Tiles;
 
 public class World {
 	
-	private final int width = 11;
-	private final int height = 11;
-	private Tile[][] tiles;
-	private List<Blob> blobs = new ArrayList<Blob>();
+	protected final int width = 11;
+	protected final int height = 11;
+	protected Tile[][] tiles;
+	protected List<Blob> blobs = new ArrayList<Blob>();
 	
 	private final static String[] levels = {"/worlds/world1.png", "/worlds/world2.png", "/worlds/world3.png"};
 
-	private boolean canRotate = true;
-	private int rotation = 0;
-	private int rotateDir = -1;
+	protected boolean canRotate = true;
+	protected int rotation = 0;
+	protected int rotateDir = -1;
 
 	public World() {
 		tiles = new Tile[width][height];
@@ -36,7 +36,7 @@ public class World {
 			for (int x = 0; x < img.getWidth(); x++) {
 				int id = (imgPixels[x + y * width] >> 16) & 0xff;
 				if(id == 3) {
-					addBlob(new Blob(x, y));
+					addBlob(new Blob(x, y, this));
 					tiles[x][y] = Tile.newTile(0);
 				} else {
 					tiles[x][y] = Tile.newTile(id);
@@ -64,7 +64,7 @@ public class World {
 	public void setTile(int x, int y, Tiles tileType) {
 		if (x < 0 || y < 0 || x >= width || y >= height)
 			return;
-		tiles[x][y].setAs(tileType);
+		tiles[x][y] = Tile.newTile(tileType);
 	}
 
 	private Tile[][] baseRotate() {
@@ -195,5 +195,13 @@ public class World {
 	
 	public static World selectLevel(int i) {
 		return new World().loadFromImage(ImageManager.getImage(levels[i]));
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
 	}
 }

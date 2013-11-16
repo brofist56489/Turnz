@@ -7,6 +7,8 @@ public class ImageManager {
 	
 	static {
 		images = new HashMap<String, Image>();
+		
+		addImage("/textures/creator/redgrid.png", "CREATOR_RED_GRID");
 	}
 	
 	public static void addImage(String path, String name) {

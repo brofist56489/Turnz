@@ -1,0 +1,11 @@
+level creator
+public static final long BIG_NUMBER_YOU_DEFINE = Long.MAX_VALUE;
+
+? - potential
+- - idea
+! - definite
+$ - will require work;
+
+Tonight goals:
+  !Level Iteration
+  $$$$? Level creator

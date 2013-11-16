@@ -1,6 +1,8 @@
 package com.gb.turnz.graphics;
 
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
@@ -46,7 +48,8 @@ public class Screen {
 
 		lights = new ArrayList<Light>();
 		lighting = new int[WIDTH * HEIGHT];
-		ImageManager.addImage("/textures/cb.png", "icon");
+		ImageManager.addImage("/textures/Icon.png", "icon");
+		ImageManager.addImage("/textures/pickleMouse.png", "pickleMouse");
 	}
 
 	private static void initProperties() {
@@ -170,6 +173,8 @@ public class Screen {
 					continue;
 				} else {
 					Screen.pixels[(int)x2 + (int)y2 * WIDTH] = pixels[x + y * w];
+					if(y2 + 1 >= HEIGHT) continue;
+					Screen.pixels[(int)x2 + (int)(y2 + 1) * WIDTH] = pixels[x + y * w];
 				}
 			}
 		}
@@ -268,6 +273,8 @@ public class Screen {
 					continue;
 
 				pixels[(int)x2 + (int)y2 * WIDTH] = c;
+				if(y2 + 1 >= HEIGHT) continue;
+				pixels[(int)x2 + (int)(y2 + 1) * WIDTH] = c;
 			}
 		}
 	}
@@ -333,6 +340,10 @@ public class Screen {
 	public static int getProperty(int property) {
 		return properties.get(property);
 	}
+	
+	public static JFrame getFrame() {
+		return frame;
+	}
 
 	public static void makeJFrame(Game game) {
 		frame = new JFrame(WINDOW_TITLE);
@@ -344,6 +355,7 @@ public class Screen {
 //			frame.setShape(new RoundRectangle2D.Double(0, 0, WIDTH * SCALE, HEIGHT * SCALE, 25, 25));
 //		}
 		frame.add(game);
+		frame.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "null cursor"));
 		frame.setIconImage(ImageManager.getImage("icon").getBufferedImage());
 		frame.pack();
 		frame.setVisible(true);
