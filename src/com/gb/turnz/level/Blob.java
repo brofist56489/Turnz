@@ -1,6 +1,5 @@
 package com.gb.turnz.level;
 
-import com.gb.turnz.base.Game;
 import com.gb.turnz.graphics.ImageManager;
 import com.gb.turnz.graphics.Light;
 import com.gb.turnz.graphics.Screen;
@@ -17,12 +16,12 @@ public class Blob {
 	
 	private Light light;
 	
-	public Blob(int x, int y) {
+	public Blob(int x, int y, World world) {
 		this.x = x;
 		this.y = y;
 		this.width = Tile.WIDTH;
 		this.height = Tile.HEIGHT;
-		this.world = Game.getWorld();
+		this.world = world;
 		light = new Light(x + width / 2, y + height / 2, 80, 255);
 		Screen.addLight(light);
 	}

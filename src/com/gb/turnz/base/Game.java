@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.gb.turnz.graphics.ImageManager;
 import com.gb.turnz.graphics.Screen;
 import com.gb.turnz.input.KeyHandler;
 import com.gb.turnz.input.MouseHandler;
@@ -39,7 +40,7 @@ public class Game extends Canvas implements Runnable {
 		requestFocusInWindow();
 		random = new Random();
 		logger = Logger.getLogger(Game.class.getName());
-		logger.setLevel(Level.ALL);
+		logger.setLevel(Level.WARNING);
 		mouse = new MouseHandler();
 		keyboard = new KeyHandler();
 
@@ -52,11 +53,8 @@ public class Game extends Canvas implements Runnable {
 		mouse.poll();
 		keyboard.poll();
 
-		// if(keyboard.isKeyDownOnce(KeyEvent.VK_RIGHT))
-		// world.initializeRotation(1);
-		// if(keyboard.isKeyDownOnce(KeyEvent.VK_LEFT))
-		// world.initializeRotation(0);
 		menu.tick();
+		mouse.poll();
 	}
 
 	public void render() {
@@ -67,10 +65,9 @@ public class Game extends Canvas implements Runnable {
 		}
 		Screen.clear(0x0, 255);
 
-		// world.render();
 		menu.render();
 
-		// Screen.finalizeLighting();
+		ImageManager.render("pickleMouse", mouse.x() - 4, mouse.y() - 4, 0);
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(Screen.getImage(), 0, 0, getWidth(), getHeight(), null);
 		g.dispose();
