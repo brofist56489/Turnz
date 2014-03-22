@@ -216,6 +216,40 @@ public class Screen {
 			}
 		}
 	}
+	
+	public static void renderColorFont(Image i, int xp, int yp, int tileId, int color) {
+		xp -= xOff;
+		yp -= yOff;
+		
+		int tileWidth = Font.getHeight();
+
+		int COLOR_KEY = properties.get(TRANSPARENT_COLOR);
+
+		int tw = i.getWidth() / 10;
+		int xt = tileId % tw;
+		int yt = tileId / tw;
+		int tileOffset = xt * tileWidth + yt * tileWidth * i.getWidth();
+
+		for (int y = 0; y < tileWidth; y++) {
+			if ((y + yp) < 0 || (y + yp) >= HEIGHT)
+				continue;
+			int ys = y;
+
+			for (int x = 0; x < tileWidth; x++) {
+				if ((x + xp) < 0 || (x + xp) >= WIDTH)
+					continue;
+				int xs = x;
+
+				int c = i.getPixels()[xs + (ys * i.getWidth()) + tileOffset];
+				if (c == COLOR_KEY)
+					continue;
+				if (c == 0xffffff)
+					c = color;
+
+				pixels[(x + xp) + (y + yp) * WIDTH] = c;
+			}
+		}
+	}
 
 	public static void renderFromTileMap(Image i, int xp, int yp, int tileId, int tileWidth, int flip, double rot) {
 		if(rot == 0) {

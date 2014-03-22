@@ -2,7 +2,7 @@ package com.gb.turnz.level;
 
 import com.gb.turnz.graphics.ImageManager;
 import com.gb.turnz.graphics.Light;
-import com.gb.turnz.graphics.Screen;
+import com.gb.turnz.level.tile.Tile;
 
 public class Blob {
 	
@@ -15,6 +15,7 @@ public class Blob {
 	private World world;
 	
 	private Light light;
+	private boolean reachedEnd = false;
 	
 	public Blob(int x, int y, World world) {
 		this.x = x;
@@ -22,8 +23,7 @@ public class Blob {
 		this.width = Tile.WIDTH;
 		this.height = Tile.HEIGHT;
 		this.world = world;
-		light = new Light(x + width / 2, y + height / 2, 80, 255);
-		Screen.addLight(light);
+		this.light = new Light(x, y, 50, 255);
 	}
 	
 	public void tick() {
@@ -83,5 +83,17 @@ public class Blob {
 	public void setY(int y) {
 		this.y = y;
 		light.moveTo(x * width + width / 2, y * height + height / 2);
+	}
+
+	public Blob makeCopy() {
+		return new Blob(x, y, world);
+	}
+	
+	public void reachedEnd(boolean f) {
+		reachedEnd = f;
+	}
+	
+	public boolean reachedEnd() {
+		return reachedEnd;
 	}
 }

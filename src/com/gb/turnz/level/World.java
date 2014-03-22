@@ -3,9 +3,13 @@ package com.gb.turnz.level;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gb.turnz.base.Game;
 import com.gb.turnz.graphics.Image;
 import com.gb.turnz.graphics.ImageManager;
-import com.gb.turnz.level.Tile.Tiles;
+import com.gb.turnz.level.tile.ConnectedTile;
+import com.gb.turnz.level.tile.Tile;
+import com.gb.turnz.level.tile.Tile.Tiles;
+import com.gb.turnz.menu.ScoreMenu;
 
 public class World {
 	
@@ -14,7 +18,7 @@ public class World {
 	protected Tile[][] tiles;
 	protected List<Blob> blobs = new ArrayList<Blob>();
 	
-	private final static String[] levels = {"/worlds/world1.png", "/worlds/world2.png", "/worlds/world3.png"};
+	private final static String[] levels = {"/worlds/world1.png", "/worlds/world2.png", "/worlds/world3.png", "/worlds/world4.png"};
 
 	protected boolean canRotate = true;
 	protected int rotation = 0;
@@ -29,7 +33,13 @@ public class World {
 		}
 	}
 	
+	public World(Tile[][] t, List<Blob> b) {
+		tiles = t;
+		blobs = b;
+	}
+	
 	public World loadFromImage(Image img) {
+		if(img.getPixels() == null) return null;
 		tiles = new Tile[width][height];
 		int[] imgPixels = img.getPixels();
 		for (int y = 0; y < img.getHeight(); y++) {
@@ -138,7 +148,21 @@ public class World {
 			if(rotation >= 90) {
 				rotateRight();
 			}
+			
 		}
+		//TODO: optimize winning
+		for(int i = 0; i < blobs.size(); i++) {
+			if(getTile(blobs.get(i).getX(), blobs.get(i).getY()).getId() == Tiles.FINISH.getId()) {
+				blobs.get(i).reachedEnd(true);
+			}
+		}
+		boolean won = true;
+		for(int i = 0; i < blobs.size(); i++) {
+			if(!blobs.get(i).reachedEnd())
+				won = false;
+		}
+		if(won)
+			win();
 	}
 
 	public void render() {
@@ -167,6 +191,10 @@ public class World {
 		for (int i = 0; i < blobs.size(); i++) {
 			blobs.get(i).render();
 		}
+	}
+	
+	public void win() {
+		Game.setMenu(new ScoreMenu(Game.getInstance(), 1000L, 2));
 	}
 
 	public void addBlob(Blob b) {
@@ -203,5 +231,12 @@ public class World {
 	
 	public int getHeight() {
 		return height;
+	}
+
+	public World makeCopy() {
+		Tile[][] t = tiles.clone();
+		List<Blob> b = new ArrayList<Blob>(blobs);
+		
+		return new World(t, b);
 	}
 }

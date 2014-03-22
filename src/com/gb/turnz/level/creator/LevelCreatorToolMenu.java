@@ -1,29 +1,24 @@
 package com.gb.turnz.level.creator;
 
-import java.awt.Color;
 import java.awt.FileDialog;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
 
 import com.gb.turnz.base.Game;
+import com.gb.turnz.graphics.Font;
 import com.gb.turnz.graphics.Image;
 import com.gb.turnz.graphics.Image.ImageLocation;
 import com.gb.turnz.graphics.ImageManager;
 import com.gb.turnz.graphics.Screen;
-import com.gb.turnz.level.Tile;
 import com.gb.turnz.level.World;
+import com.gb.turnz.level.tile.Tile;
+import com.gb.turnz.level.tile.Tile.Tiles;
 import com.gb.turnz.menu.MainMenu;
 import com.gb.turnz.menu.Menu;
 import com.gb.turnz.menu.MenuObject;
 
 public class LevelCreatorToolMenu extends Menu {
 
-	private int blockId = 1;
+	private int blockId = 0;
 
 	public LevelCreatorToolMenu() {
 		super(Game.getInstance());
@@ -38,44 +33,13 @@ public class LevelCreatorToolMenu extends Menu {
 	}
 
 	public void init() {
-		addObject(new MenuObject.Button(130, 10, "Export") {
+		addObject(new MenuObject.Button(178, 250, "Export") {
 			public void onClick() {
-				World world = Game.getWorld();
-				int width = world.getWidth();
-				int height = world.getHeight();
-				int[] pixels = new int[width * height];
-
-				for (int y = 0; y < height; y++) {
-					for (int x = 0; x < width; x++) {
-						pixels[x + y * width] = new Color(world.getTile(x, y).getId(), 0, 0).getRGB();
-					}
-				}
-
-				BufferedImage i = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-				i.setRGB(0, 0, width, height, pixels, 0, width);
-
-				File f = null;
-				FileDialog fileSaver = new FileDialog(Screen.getFrame(), "Save PNG", FileDialog.SAVE);
-				fileSaver.setFile("*.lvl");
-				fileSaver.setVisible(true);
-				
-				f = new File(fileSaver.getDirectory() + "/" + fileSaver.getFile());
-				
-				if(!f.getName().endsWith(".lvl")) {
-					if(f.getName().contains(".")) {
-						f = new File(fileSaver.getDirectory() + "/" + f.getName().substring(0, f.getName().length() - 3));
-					}
-					f = new File(f.getPath().concat(".png"));
-				}
-
-				try {
-					ImageIO.write(i, "PNG", f);
-				} catch (IOException e) {
-					JOptionPane.showMessageDialog(Screen.getFrame(), "There was an error exporting your world!");
-				}
+				CreatorWorld world = (CreatorWorld)Game.getWorld();
+				world.saveToFile();
 			}
 		});
-		addObject(new MenuObject.Button(10, 10, "Import") {
+		addObject(new MenuObject.Button(158 - 96, 250, "Import") {
 			public void onClick() {
 				World world = Game.getWorld();
 				FileDialog fileLoader = new FileDialog(Screen.getFrame(), "Load Level", FileDialog.LOAD);
@@ -89,15 +53,22 @@ public class LevelCreatorToolMenu extends Menu {
 				world.checkConnections();
 			}
 		});
-		addObject(new MenuObject.Button(250, 10, "Quit") {
+		addObject(new MenuObject.Button(Font.getScreenCenterX("Quit"), 352 - 40, "Quit") {
 			public void onClick() {
 				Game.setMenu(new MainMenu(Game.getInstance()));
 			}
 		});
+		addObject(new TileChoice(10, 10, Tiles.BLUE_WALL));
+		addObject(new TileChoice(50, 10, Tiles.FINISH));
+		addObject(new TileChoice(90, 10, Tiles.BLOB));
 	}
 
 	public int getBlockId() {
 		return blockId;
+	}
+	
+	public void setBlockId(int id) {
+		this.blockId = id;
 	}
 	
 	public void tick() {
@@ -120,5 +91,48 @@ public class LevelCreatorToolMenu extends Menu {
 		}
 		Screen.fade(128);
 		super.render();
+	}
+	
+	private static class TileChoice extends MenuObject {
+
+		private Tiles tile;
+		private boolean hovered;
+		public TileChoice(int x, int y, Tiles t) {
+			super(x, y, 32, 32);
+			this.tile = t;
+			hovered = false;
+		}
+		
+		public void onClick() {
+			LevelCreatorToolMenu menu = (LevelCreatorToolMenu)this.menu;
+			menu.setBlockId(this.tile.getId());
+		}
+
+		public void onHover() {
+			if(!isSelectedTile()) {
+				hovered = true;
+			}
+		}
+
+		public void onNotHover() {
+			hovered = false;
+		}
+		
+		private boolean isSelectedTile() {
+			LevelCreatorToolMenu menu = (LevelCreatorToolMenu)this.menu;
+			return menu.getBlockId() == this.tile.getId();
+		}
+
+		public void render() {
+			if(isSelectedTile()) {
+				Screen.renderRect(x - 2, y - 2, width + 4, height + 4, 0x00ff00);
+			} else if(hovered) {
+				Screen.renderRect(x - 2, y - 2, width + 4, height + 4, 0xff0000);
+			}
+			if(tile.getId() == 3)
+				ImageManager.render("BLOB", x, y, 0);
+			else
+				ImageManager.renderFromTileMap("tileMap", x, y, tile.getTextureId(), 32, 0);
+		}
 	}
 }

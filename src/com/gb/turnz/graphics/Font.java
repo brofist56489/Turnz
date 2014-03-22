@@ -41,15 +41,15 @@ public class Font {
 		return x;
 	}
 	
-//	public static void render(String msg, int x, int y, int color) {
-//		
-//		for(int i = 0; i < msg.length(); i++) {
-//			int index = chars.indexOf(msg.charAt(i));
-//			
-//			if(index >= 0) {
-//				Image img = ImageManager.getImage("FONT_2");
-//				b.renderColorFont(img, x + i * 10, y, index, 10, color);
-//			}
-//		}
-//	}
+	public static void render(String msg, int x, int y, int color) {
+		
+		for(int i = 0; i < msg.length(); i++) {
+			int index = chars.indexOf(msg.charAt(i));
+			
+			if(index >= 0) {
+				Image img = ImageManager.getImage("FONT_2");
+				Screen.renderColorFont(img, x + i * Font.getWidth(), y, index, color);
+			}
+		}
+	}
 }

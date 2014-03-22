@@ -2,10 +2,21 @@ level creator
 public static final long BIG_NUMBER_YOU_DEFINE = Long.MAX_VALUE;
 
 ? - potential
-- - idea
 ! - definite
 $ - will require work;
 
-Tonight goals:
-  !Level Iteration
-  $$$$? Level creator
+!$Finish the level creator
+	$$$$$$$$$$- Level Solver Algorithm
+	!- Full tile implementation
+	!- Eraser
+	!- Name the level
+	
+	
+!Dark View - no lights except around blobs.
+
+!!$$$$$- Multiplayer
+	A. Time to complete
+	B. Two people, same map, don't see each other.
+	
+	
+? Collect "imformation" disks as points

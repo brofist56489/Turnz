@@ -4,8 +4,8 @@ import java.awt.event.KeyEvent;
 
 import com.gb.turnz.base.Game;
 import com.gb.turnz.graphics.ImageManager;
-import com.gb.turnz.level.Tile;
-import com.gb.turnz.level.Tile.Tiles;
+import com.gb.turnz.level.tile.Tile;
+import com.gb.turnz.level.tile.Tile.Tiles;
 import com.gb.turnz.menu.Menu;
 
 public class LevelCreatorEditorMenu extends Menu {
@@ -30,9 +30,24 @@ public class LevelCreatorEditorMenu extends Menu {
 		if(Game.getMouse().buttonDown(1)) {
 			int tx = Game.getMouse().x() / Tile.WIDTH;
 			int ty = Game.getMouse().y() / Tile.HEIGHT;
-			
-			Game.getWorld().setTile(tx, ty, Tiles.getById(blockId));
-			Game.getWorld().checkConnections();
+			if(blockId == 3) {
+				CreatorWorld world = ((CreatorWorld)Game.getWorld());
+				if(world.getBlobAt(tx, ty) == null && world.getTile(tx, ty).getId() == Tiles.AIR.getId())
+					world.addBlobAt(tx, ty);
+			} else {
+				Game.getWorld().setTile(tx, ty, Tiles.getById(blockId));
+			}
+		} else if(Game.getMouse().buttonDown(3)) {
+			int tx = Game.getMouse().x() / Tile.WIDTH;
+			int ty = Game.getMouse().y() / Tile.HEIGHT;
+			CreatorWorld world = ((CreatorWorld)Game.getWorld());
+			if(world.getTile(tx, ty).getId() != Tiles.AIR.getId()) {
+				world.setTile(tx, ty, Tiles.AIR);
+			}
+			if(world.getBlobAt(tx, ty) != null) {
+				world.removeBlobAt(tx, ty);
+				Game.getWorld().checkConnections();
+			}
 		}
 	}
 	

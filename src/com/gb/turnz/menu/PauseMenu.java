@@ -17,6 +17,7 @@ public class PauseMenu extends Menu {
 	}
 	
 	private void init() {
+		addObject(new MenuObject.Text("Paused", Font.getScreenCenterX("Paused"), 30));
 		addObject(new MenuObject.Button(Font.getScreenCenterX("Play"), 150, "Play", 0x7f007f) {
 			public void onClick() {
 				Game.setMenu(parentMenu);

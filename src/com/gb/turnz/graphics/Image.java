@@ -27,7 +27,7 @@ public class Image {
 			else
 				loadedImage = ImageIO.read(new File(path));
 		} catch (IOException e) {
-			e.printStackTrace();
+			return;
 		}
 
 		width = loadedImage.getWidth();

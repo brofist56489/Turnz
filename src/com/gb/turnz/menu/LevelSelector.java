@@ -18,6 +18,7 @@ public class LevelSelector extends Menu {
 	}
 	
 	private void init() {
+		addObject(new MenuObject.Text("Pick Your Poison", Font.getScreenCenterX("Pick Your Poison"), 30));
 		String[] levels = World.getLevels();
 		for(int i = 0; i < levels.length; i++) {
 			ImageManager.addImage(levels[i], levels[i]);

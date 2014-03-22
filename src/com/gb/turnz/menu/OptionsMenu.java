@@ -16,6 +16,9 @@ public class OptionsMenu extends Menu {
 	}
 
 	private void init() {
+		
+		addObject(new MenuObject.Text("Options", Font.getScreenCenterX("Options"), 30));
+		
 		addObject(new MenuObject.Button(136, 300, "Done") {
 			public void onClick() {
 				Game.setMenu(parentMenu);

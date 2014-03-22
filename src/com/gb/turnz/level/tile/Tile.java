@@ -1,7 +1,8 @@
-package com.gb.turnz.level;
+package com.gb.turnz.level.tile;
 
 import com.gb.turnz.graphics.ImageManager;
 import com.gb.turnz.graphics.Screen;
+import com.gb.turnz.level.World;
 
 public class Tile {
 	
@@ -63,14 +64,14 @@ public class Tile {
 		BLUE_WALL(0x7f7f7f, true, true, 0, 1),
 		RED_WALL(0xff0000, true, true, 17, 4),
 		FINISH(0x9a89a8, false, false, 16, 2),
-		BORDER_TILE(0x000000, true, false, -1, 5);
+		BORDER_TILE(0x000000, true, false, -1, 5),
+		BLOB(0x000000, true, false, -1, 3);
 		
 		private int color;
 		private boolean solid;
 		private int textId;
 		private int id;
 		private boolean connected;
-		
 		Tiles(int c, boolean s, boolean con, int t, int i) {
 			color = c;
 			solid = s;

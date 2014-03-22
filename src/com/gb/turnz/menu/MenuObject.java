@@ -40,14 +40,43 @@ public abstract class MenuObject {
 	public abstract void onNotHover();
 
 	public abstract void render();
-
-	public static class Button extends MenuObject {
+	
+	public static class Text extends MenuObject {
 
 		protected String text;
-
-		public Button(int x, int y, String text) {
+		public Text(String text, int x, int y) {
 			super(x, y, text.length() * Font.getWidth(), Font.getHeight());
 			this.text = text.trim();
+			color = 0xffffff;
+		}
+		
+		public Text(String text, int x, int y, int color) {
+			super(x, y, text.length() * Font.getWidth(), Font.getHeight());
+			this.text = text.trim();
+			this.color = color;
+		}
+		
+		public void render() {
+			Font.render(text, x + ((width - (text.length() * Font.getWidth())) / 2), y, color);
+		}
+
+		public void onClick() {
+			
+		}
+
+		public void onHover() {
+			
+		}
+
+		public void onNotHover() {
+			
+		}
+	}
+
+	public static class Button extends Text {
+
+		public Button(int x, int y, String text) {
+			super(text, x, y, 0x000000);
 		}
 		
 		public Button(int x, int y, String text, int color) {
@@ -57,7 +86,7 @@ public abstract class MenuObject {
 
 		public void render() {
 			Screen.renderRect(x, y, width, height, color);
-			Font.render(text, x + ((width - (text.length() * Font.getWidth())) / 2), y);
+			Font.render(text, x, y);
 		}
 
 		public void onClick() {

@@ -1,7 +1,8 @@
-package com.gb.turnz.level;
+package com.gb.turnz.level.tile;
 
 import com.gb.turnz.base.Game;
 import com.gb.turnz.graphics.ImageManager;
+import com.gb.turnz.level.World;
 
 public class ConnectedTile extends Tile {
 
