@@ -50,7 +50,9 @@ public class CreatorWorld extends World {
 
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				pixels[x + y * width] = new Color(getTile(x, y).getId(), 0, 0).getRGB();
+				if(getBlobAt(x, y) != null) {
+					pixels[x + y * width] = new Color(3, 0, 0).getRGB();
+				} else pixels[x + y * width] = new Color(getTile(x, y).getId(), 0, 0).getRGB();
 			}
 		}
 
@@ -67,7 +69,7 @@ public class CreatorWorld extends World {
 		if(!f.getName().endsWith(".lvl")) {
 			if(f.getName().contains(".")) {
 				f = new File(fileSaver.getDirectory() + "/" + f.getName().substring(0, f.getName().length() - 3));
-			}
+			} 
 			f = new File(f.getPath().concat(".png"));
 		}
 

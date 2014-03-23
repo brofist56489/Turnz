@@ -17,7 +17,7 @@ public class Screen {
 	public static final String WINDOW_TITLE = "Turnz";
 
 	public static final int WIDTH = 352;
-	public static final int HEIGHT = 352;
+	public static final int HEIGHT = 384;
 	public static final int SCALE = 2;
 
 	public static final int TRUE = 0x01;

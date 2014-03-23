@@ -8,11 +8,8 @@ import com.gb.turnz.level.tile.Tile;
 import com.gb.turnz.level.tile.Tile.Tiles;
 
 public class LevelSolver {
-	@SuppressWarnings("unused")
 	private World world;
-	@SuppressWarnings("unused")
 	private Blob blob;
-	@SuppressWarnings("unused")
 	private Point goal;
 	
 	public LevelSolver(World world, Blob blob) {

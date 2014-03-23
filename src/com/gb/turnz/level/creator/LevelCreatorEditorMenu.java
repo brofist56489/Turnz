@@ -37,6 +37,7 @@ public class LevelCreatorEditorMenu extends Menu {
 			} else {
 				Game.getWorld().setTile(tx, ty, Tiles.getById(blockId));
 			}
+			Game.getWorld().checkConnections();
 		} else if(Game.getMouse().buttonDown(3)) {
 			int tx = Game.getMouse().x() / Tile.WIDTH;
 			int ty = Game.getMouse().y() / Tile.HEIGHT;
@@ -46,8 +47,8 @@ public class LevelCreatorEditorMenu extends Menu {
 			}
 			if(world.getBlobAt(tx, ty) != null) {
 				world.removeBlobAt(tx, ty);
-				Game.getWorld().checkConnections();
 			}
+			Game.getWorld().checkConnections();
 		}
 	}
 	

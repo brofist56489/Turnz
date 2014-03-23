@@ -65,7 +65,7 @@ public class Tile {
 		RED_WALL(0xff0000, true, true, 17, 4),
 		FINISH(0x9a89a8, false, false, 16, 2),
 		BORDER_TILE(0x000000, true, false, -1, 5),
-		BLOB(0x000000, true, false, -1, 3);
+		BLOB(0x000000, true, false, 33, 3);
 		
 		private int color;
 		private boolean solid;

@@ -129,10 +129,7 @@ public class LevelCreatorToolMenu extends Menu {
 			} else if(hovered) {
 				Screen.renderRect(x - 2, y - 2, width + 4, height + 4, 0xff0000);
 			}
-			if(tile.getId() == 3)
-				ImageManager.render("BLOB", x, y, 0);
-			else
-				ImageManager.renderFromTileMap("tileMap", x, y, tile.getTextureId(), 32, 0);
+			ImageManager.renderFromTileMap("tileMap", x, y, tile.getTextureId(), 32, 0);
 		}
 	}
 }

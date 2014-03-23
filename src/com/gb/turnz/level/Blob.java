@@ -6,10 +6,6 @@ import com.gb.turnz.level.tile.Tile;
 
 public class Blob {
 	
-	static {
-		ImageManager.addImage("/textures/blob.png", "BLOB");
-	}
-	
 	private int x, y;
 	private int width, height;
 	private World world;
@@ -40,7 +36,7 @@ public class Blob {
 	
 	public void render() {
 		if(world.getRotation() == 0)
-			ImageManager.render("BLOB",	 x * width, y * height, 0);
+			ImageManager.renderFromTileMap("tileMap", x * width, y * height, 33, 32, 0);
 		else {
 			double rad = Math.toRadians(world.getRotation());
 			double sin = Math.sin(rad);
@@ -55,7 +51,7 @@ public class Blob {
 			yr += Tile.HEIGHT * 5;
 			light.moveTo(xr, yr);
 			
-			ImageManager.render("BLOB",	 xr, yr, world.getRotationInRadians());
+			ImageManager.renderFromTileMap("tileMap", xr, yr, 33, 32, 0, -rad);
 		}
 	}
 

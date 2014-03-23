@@ -79,7 +79,7 @@ public class Game extends Canvas implements Runnable {
 		init();
 
 		long lastTime = System.nanoTime();
-		double nsPerTick = 1000000000.0 / 30.0;
+		double nsPerTick = 1000000000.0 / 60.0;
 		double unprocessed = 0.0;
 		long now;
 		int ticks = 0, frames = 0;
@@ -110,7 +110,6 @@ public class Game extends Canvas implements Runnable {
 				ticks = frames = 0;
 			}
 		}
-
 	}
 
 	public synchronized void start() {
