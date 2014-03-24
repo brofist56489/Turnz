@@ -1,21 +1,16 @@
-level creator
-public static final long BIG_NUMBER_YOU_DEFINE = Long.MAX_VALUE;
-
 ? - potential
 ! - definite
 $ - will require work;
 
 !$Finish the level creator
-	$$$$$$$$$$- Level Solver Algorithm
 	!- Full tile implementation
-	!- Eraser
-	!- Name the level
+	!  Name Level
 	
 	
-!Dark View - no lights except around blobs.
+?Dark View - no lights except around blobs.
 
 !!$$$$$- Multiplayer
-	A. Time to complete
+	A. Moves add to score, disks subtract
 	B. Two people, same map, don't see each other.
 	
 	
