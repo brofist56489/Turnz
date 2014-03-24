@@ -61,6 +61,8 @@ public class LevelCreatorToolMenu extends Menu {
 		addObject(new TileChoice(10, 10, Tiles.BLUE_WALL));
 		addObject(new TileChoice(50, 10, Tiles.FINISH));
 		addObject(new TileChoice(90, 10, Tiles.BLOB));
+		addObject(new TileChoice(130, 10, Tiles.BLUE_DISK));
+		addObject(new TileChoice(170, 10, Tiles.RED_DISK));
 	}
 
 	public int getBlockId() {

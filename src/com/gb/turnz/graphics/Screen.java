@@ -39,6 +39,8 @@ public class Screen {
 	private static int[] lighting;
 	private static BufferedImage destImage;
 
+	private static int mOff = 0;
+
 	static {
 		properties = new HashMap<Integer, Integer>();
 		initProperties();
@@ -63,10 +65,10 @@ public class Screen {
 			lighting[i] = lightLevel;
 		}
 	}
-	
+
 	public static void fade(int fade) {
-		for(int y=0; y<HEIGHT; y++) {
-			for(int x=0; x<WIDTH; x++) {
+		for (int y = 0; y < HEIGHT; y++) {
+			for (int x = 0; x < WIDTH; x++) {
 				pixels[x + y * WIDTH] = applyLighting(pixels[x + y * WIDTH], fade);
 			}
 		}
@@ -79,7 +81,7 @@ public class Screen {
 	public static void render(Image img, int xp, int yp, double rad) {
 		render(img.getPixels(), xp, yp, img.getWidth(), img.getHeight(), rad);
 	}
-	
+
 	public static void renderScaled(Image img, int xp, int yp, double scale) {
 		render(img.getScaledImage(scale), xp, yp, 0);
 	}
@@ -120,7 +122,7 @@ public class Screen {
 	}
 
 	public static void renderRect(int xp, int yp, int w, int h, int color) {
-		if(color == properties.get(TRANSPARENT_COLOR)) {
+		if (color == properties.get(TRANSPARENT_COLOR)) {
 			return;
 		}
 		xp -= xOff;
@@ -155,7 +157,7 @@ public class Screen {
 		float x2, y2;
 		for (y = 0; y < h; y++) {
 			for (x = 0; x < w; x++) {
-				
+
 				toX = (w / 2) - x;
 				toY = (h / 2) - y;
 				fromX = (cos * toX) - (sin * toY);
@@ -172,9 +174,10 @@ public class Screen {
 				} else if (pixels[x + y * w] == COLOR_KEY) {
 					continue;
 				} else {
-					Screen.pixels[(int)x2 + (int)y2 * WIDTH] = pixels[x + y * w];
-					if(y2 + 1 >= HEIGHT) continue;
-					Screen.pixels[(int)x2 + (int)(y2 + 1) * WIDTH] = pixels[x + y * w];
+					Screen.pixels[(int) x2 + (int) y2 * WIDTH] = pixels[x + y * w];
+					if (y2 + 1 >= HEIGHT)
+						continue;
+					Screen.pixels[(int) x2 + (int) (y2 + 1) * WIDTH] = pixels[x + y * w];
 				}
 			}
 		}
@@ -216,11 +219,11 @@ public class Screen {
 			}
 		}
 	}
-	
+
 	public static void renderColorFont(Image i, int xp, int yp, int tileId, int color) {
 		xp -= xOff;
 		yp -= yOff;
-		
+
 		int tileWidth = Font.getHeight();
 
 		int COLOR_KEY = properties.get(TRANSPARENT_COLOR);
@@ -252,7 +255,7 @@ public class Screen {
 	}
 
 	public static void renderFromTileMap(Image i, int xp, int yp, int tileId, int tileWidth, int flip, double rot) {
-		if(rot == 0) {
+		if (rot == 0) {
 			renderFromTileMap(i, xp, yp, tileId, tileWidth, flip);
 		}
 		xp -= xOff;
@@ -265,7 +268,7 @@ public class Screen {
 
 		rot *= -1;
 		rot -= Math.PI / 2;
-		
+
 		float sin = (float) Math.sin(rot);
 		float cos = (float) Math.cos(rot);
 
@@ -306,16 +309,17 @@ public class Screen {
 				if (c == COLOR_KEY)
 					continue;
 
-				pixels[(int)x2 + (int)y2 * WIDTH] = c;
-				if(y2 + 1 >= HEIGHT) continue;
-				pixels[(int)x2 + (int)(y2 + 1) * WIDTH] = c;
+				pixels[(int) x2 + (int) y2 * WIDTH] = c;
+				if (y2 + 1 >= HEIGHT)
+					continue;
+				pixels[(int) x2 + (int) (y2 + 1) * WIDTH] = c;
 			}
 		}
 	}
 
-//	private static int applyLighting(int c, int x, int y) {
-//		return applyLighting(c, lighting[x + y * WIDTH]);
-//	}
+	// private static int applyLighting(int c, int x, int y) {
+	// return applyLighting(c, lighting[x + y * WIDTH]);
+	// }
 
 	private static int applyLighting(int color, int brightness) {
 		if (brightness >= 255)
@@ -349,7 +353,7 @@ public class Screen {
 			pixels[i] = applyLighting(pixels[i], lighting[i]);
 		}
 	}
-	
+
 	public static void setOffset(int x, int y) {
 		xOff = x;
 		yOff = y;
@@ -374,7 +378,7 @@ public class Screen {
 	public static int getProperty(int property) {
 		return properties.get(property);
 	}
-	
+
 	public static JFrame getFrame() {
 		return frame;
 	}
@@ -384,13 +388,17 @@ public class Screen {
 		frame.setMinimumSize(new Dimension(WIDTH, HEIGHT));
 		frame.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		if (System.getProperty("os.name").equals("Windows 7")) {
-//			frame.setUndecorated(true);
-//			frame.setShape(new RoundRectangle2D.Double(0, 0, WIDTH * SCALE, HEIGHT * SCALE, 25, 25));
-//		}
+		if (System.getProperty("os.name").equals("Windows 7")) {
+			mOff = 16;
+		} else if (System.getProperty("os.name").equals("Mac")) {
+			mOff = 4;
+		} else if (System.getProperty("os.name").contains("nux")) {
+			mOff = 4;
+		}
 		frame.add(game);
-		frame.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "null cursor"));
+		frame.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(ImageManager.getImage("pickleMouse").getBufferedImage(), new Point(mOff, mOff), "null cursor"));
 		frame.setIconImage(ImageManager.getImage("icon").getBufferedImage());
+		frame.setLocationRelativeTo(null);
 		frame.pack();
 		frame.setVisible(true);
 	}

@@ -1,5 +1,6 @@
 package com.gb.turnz.level;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,13 +13,25 @@ import com.gb.turnz.level.tile.Tile.Tiles;
 import com.gb.turnz.menu.ScoreMenu;
 
 public class World {
-	
+
 	protected final int width = 11;
 	protected final int height = 11;
 	protected Tile[][] tiles;
 	protected List<Blob> blobs = new ArrayList<Blob>();
-	
-	private final static String[] levels = {"/worlds/world1.png", "/worlds/world2.png", "/worlds/world3.png", "/worlds/world4.png"};
+
+	private static String[] levels = null;
+
+	public static void init() {
+		try {
+			levels = fileNames(new File("/worlds").listFiles());
+		} catch (NullPointerException e) {
+			correctNames();
+		}
+	}
+
+	private static String[] correctNames() {
+		return levels = new String[] { "/worlds/world1.png", "/worlds/world2.png", "/worlds/world3.png", "/worlds/world4.png", "/worlds/explained.lvl", "/worlds/compare.lvl" };
+	}
 
 	protected boolean canRotate = true;
 	protected int rotation = 0;
@@ -32,20 +45,21 @@ public class World {
 			}
 		}
 	}
-	
+
 	public World(Tile[][] t, List<Blob> b) {
 		tiles = t;
 		blobs = b;
 	}
-	
+
 	public World loadFromImage(Image img) {
-		if(img.getPixels() == null) return null;
+		if (img.getPixels() == null)
+			return null;
 		tiles = new Tile[width][height];
 		int[] imgPixels = img.getPixels();
 		for (int y = 0; y < img.getHeight(); y++) {
 			for (int x = 0; x < img.getWidth(); x++) {
 				int id = (imgPixels[x + y * width] >> 16) & 0xff;
-				if(id == 3) {
+				if (id == 3) {
 					addBlob(new Blob(x, y, this));
 					tiles[x][y] = Tile.newTile(0);
 				} else {
@@ -55,12 +69,12 @@ public class World {
 		}
 		return this;
 	}
-	
+
 	public void checkConnections() {
-		for(int y=0; y<height; y++) {
-			for(int x=0; x<width; x++) {
-				if(tiles[x][y] instanceof ConnectedTile)
-					((ConnectedTile)tiles[x][y]).checkConnection(x, y);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				if (tiles[x][y] instanceof ConnectedTile)
+					((ConnectedTile) tiles[x][y]).checkConnection(x, y);
 			}
 		}
 	}
@@ -88,7 +102,8 @@ public class World {
 	}
 
 	public void rotateLeft() {
-		if(!canRotate) return;
+		if (!canRotate)
+			return;
 		rotation = 0;
 		rotateDir = -1;
 		Tile[][] newTiles = baseRotate();
@@ -108,7 +123,8 @@ public class World {
 	}
 
 	public void rotateRight() {
-		if(!canRotate) return;
+		if (!canRotate)
+			return;
 		rotation = 0;
 		rotateDir = -1;
 		Tile[][] newTiles = baseRotate();
@@ -126,8 +142,7 @@ public class World {
 		}
 		checkConnections();
 	}
-	
-	
+
 	/**
 	 * @param dir - direction, 0 - left, 1 - right
 	 */
@@ -140,28 +155,28 @@ public class World {
 		for (int i = 0; i < blobs.size(); i++) {
 			blobs.get(i).tick();
 		}
-		if(rotateDir != -1) {
+		if (rotateDir != -1) {
 			rotation += (rotateDir == 0) ? -10 : 10;
-			if(rotation <= -90) {
+			if (rotation <= -90) {
 				rotateLeft();
 			}
-			if(rotation >= 90) {
+			if (rotation >= 90) {
 				rotateRight();
 			}
-			
+
 		}
-		//TODO: optimize winning
-		for(int i = 0; i < blobs.size(); i++) {
-			if(getTile(blobs.get(i).getX(), blobs.get(i).getY()).getId() == Tiles.FINISH.getId()) {
+		// TODO: optimize winning
+		for (int i = 0; i < blobs.size(); i++) {
+			if (getTile(blobs.get(i).getX(), blobs.get(i).getY()).getId() == Tiles.FINISH.getId()) {
 				blobs.get(i).reachedEnd(true);
 			}
 		}
 		boolean won = true;
-		for(int i = 0; i < blobs.size(); i++) {
-			if(!blobs.get(i).reachedEnd())
+		for (int i = 0; i < blobs.size(); i++) {
+			if (!blobs.get(i).reachedEnd())
 				won = false;
 		}
-		if(won)
+		if (won)
 			win();
 	}
 
@@ -192,9 +207,13 @@ public class World {
 			blobs.get(i).render();
 		}
 	}
-	
+
 	public void win() {
-		Game.setMenu(new ScoreMenu(Game.getInstance(), 1000L, 2));
+		String OS = System.getProperty("os.name").toUpperCase();
+		if(OS.contains("WIN"))
+			Game.setMenu(new ScoreMenu(Game.getInstance(), 91L, 2));
+		if(OS.contains("MAC"))
+			Game.setMenu(new ScoreMenu(Game.getInstance(), 0x4920616D20612068657820636F6E766572746572, 2));
 	}
 
 	public void addBlob(Blob b) {
@@ -208,27 +227,27 @@ public class World {
 	public double getRotationInRadians() {
 		return Math.toRadians(rotation);
 	}
-	
+
 	public void ableToRotate(boolean able) {
 		canRotate = able;
 	}
-	
+
 	public boolean ableToRotate() {
 		return canRotate;
 	}
-	
+
 	public static String[] getLevels() {
 		return levels;
 	}
-	
+
 	public static World selectLevel(int i) {
 		return new World().loadFromImage(ImageManager.getImage(levels[i]));
 	}
-	
+
 	public int getWidth() {
 		return width;
 	}
-	
+
 	public int getHeight() {
 		return height;
 	}
@@ -236,7 +255,16 @@ public class World {
 	public World makeCopy() {
 		Tile[][] t = tiles.clone();
 		List<Blob> b = new ArrayList<Blob>(blobs);
-		
+
 		return new World(t, b);
+	}
+
+	public static String[] fileNames(File[] files) {
+		String[] names = new String[files.length];
+		for (int i = 0; i < files.length; i++) {
+			names[i] = files[i].getName();
+			System.out.println(names[i]);
+		}
+		return names;
 	}
 }

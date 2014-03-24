@@ -1,4 +1,4 @@
-level creator
+
 public static final long BIG_NUMBER_YOU_DEFINE = Long.MAX_VALUE;
 
 ? - potential
@@ -6,11 +6,9 @@ public static final long BIG_NUMBER_YOU_DEFINE = Long.MAX_VALUE;
 $ - will require work;
 
 !$Finish the level creator
-	$$$$$$$$$$- Level Solver Algorithm
 	!- Full tile implementation
 	!- Eraser
 	!- Name the level
-	
 	
 !Dark View - no lights except around blobs.
 
@@ -20,3 +18,5 @@ $ - will require work;
 	
 	
 ? Collect "imformation" disks as points
+	A. Blue Disks - 300 points.
+	B. Red Disks - 500 points

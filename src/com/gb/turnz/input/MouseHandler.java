@@ -60,7 +60,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 	}
 	
 	public Rectangle getRect() {
-		return new Rectangle(mousePosX, mousePosY, 1, 1);
+		return new Rectangle(mousePosX, mousePosY, 8, 8);
 	}
 	
 	public boolean hasMoved() {

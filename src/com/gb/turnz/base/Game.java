@@ -7,7 +7,6 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.gb.turnz.graphics.ImageManager;
 import com.gb.turnz.graphics.Screen;
 import com.gb.turnz.input.KeyHandler;
 import com.gb.turnz.input.MouseHandler;
@@ -37,6 +36,7 @@ public class Game extends Canvas implements Runnable {
 	public void init() {
 		instance = this;
 
+		World.init();
 		requestFocusInWindow();
 		random = new Random();
 		logger = Logger.getLogger(Game.class.getName());
@@ -67,7 +67,7 @@ public class Game extends Canvas implements Runnable {
 
 		menu.render();
 
-		ImageManager.render("pickleMouse", mouse.x() - 4, mouse.y() - 4, 0);
+//		ImageManager.render("pickleMouse", mouse.x() - 4, mouse.y() - 4, 0);
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(Screen.getImage(), 0, 0, getWidth(), getHeight(), null);
 		g.dispose();
