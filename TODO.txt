@@ -6,8 +6,6 @@ public static final long BIG_NUMBER_YOU_DEFINE = Long.MAX_VALUE;
 $ - will require work;
 
 !$Finish the level creator
-	!- Full tile implementation
-	!- Eraser
 	!- Name the level
 	
 !Dark View - no lights except around blobs.
@@ -20,3 +18,19 @@ $ - will require work;
 ? Collect "imformation" disks as points
 	A. Blue Disks - 300 points.
 	B. Red Disks - 500 points
+
+Network setup:
+
+TCP
+Server-Client Based (host / player)  Same thing, server decides who wins
+Level Class -> (Single Player, Multiplayer) -> World, multiplayer has tcp stuff
+
+	New Menus:
+		IP Connect, default port if none specified
+		Level chooser (new one for single and multiplayer)
+		Waiting for other player...
+		Multiplayer Scores
+		~~Better options
+		You win/lose
+		Play again?
+		
