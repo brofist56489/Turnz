@@ -24,7 +24,7 @@ public class MainMenu extends Menu {
 		addObject(new MenuObject.MenuImage("menuImage", 0, 0));
 		addObject(new MenuObject.Button(Font.getScreenCenterX("Play"), 200, "Play") {
 			public void onClick() {
-				Game.setMenu(new LevelSelector(menu));
+				Game.setMenu(new PlayMenu(menu));
 			}
 		});
 

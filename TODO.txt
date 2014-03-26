@@ -19,6 +19,8 @@ $ - will require work;
 	A. Blue Disks - 300 points.
 	B. Red Disks - 500 points
 
+BLOBS COLLIDE WITH OTHER BLOBS
+
 Network setup:
 
 TCP

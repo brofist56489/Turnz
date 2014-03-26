@@ -22,7 +22,7 @@ public class LevelCreatorToolMenu extends Menu {
 
 	public LevelCreatorToolMenu() {
 		super(Game.getInstance());
-		Game.setWorld(new CreatorWorld());
+		Game.getLevel().setToCreatorWorld();
 		init();
 	}
 
@@ -35,13 +35,13 @@ public class LevelCreatorToolMenu extends Menu {
 	public void init() {
 		addObject(new MenuObject.Button(178, 250, "Export") {
 			public void onClick() {
-				CreatorWorld world = (CreatorWorld)Game.getWorld();
+				CreatorWorld world = (CreatorWorld)Game.getLevel().getWorld();
 				world.saveToFile();
 			}
 		});
 		addObject(new MenuObject.Button(158 - 96, 250, "Import") {
 			public void onClick() {
-				World world = Game.getWorld();
+				World world = Game.getLevel().getWorld();
 				FileDialog fileLoader = new FileDialog(Screen.getFrame(), "Load Level", FileDialog.LOAD);
 				fileLoader.setFile("*.lvl");
 				fileLoader.setVisible(true);
@@ -82,10 +82,10 @@ public class LevelCreatorToolMenu extends Menu {
 	}
 	
 	public void render() {
-		int width = Game.getWorld().getWidth();
-		int height = Game.getWorld().getHeight();
+		int width = Game.getLevel().getWorld().getWidth();
+		int height = Game.getLevel().getWorld().getHeight();
 		
-		Game.getWorld().render();
+		Game.getLevel().getWorld().render();
 		for(int y=0; y<height; y++) {
 			for(int x=0; x<width; x++) {
 				ImageManager.render("CREATOR_RED_GRID", x * Tile.WIDTH, y * Tile.HEIGHT, 1);

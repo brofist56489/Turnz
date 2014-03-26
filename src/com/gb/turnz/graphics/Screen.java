@@ -398,8 +398,8 @@ public class Screen {
 		frame.add(game);
 		frame.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(ImageManager.getImage("pickleMouse").getBufferedImage(), new Point(mOff, mOff), "null cursor"));
 		frame.setIconImage(ImageManager.getImage("icon").getBufferedImage());
-		frame.setLocationRelativeTo(null);
 		frame.pack();
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 }

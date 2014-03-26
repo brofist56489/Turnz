@@ -23,6 +23,7 @@ public class LevelCreatorEditorMenu extends Menu {
 	
 	public void tick() {
 		super.tick();
+		CreatorWorld world = ((CreatorWorld)Game.getLevel().getWorld());
 		if(Game.getKeyboard().isKeyDownOnce(KeyEvent.VK_ESCAPE)) {
 			Game.setMenu(new LevelCreatorToolMenu(this));
 		}
@@ -31,32 +32,30 @@ public class LevelCreatorEditorMenu extends Menu {
 			int tx = Game.getMouse().x() / Tile.WIDTH;
 			int ty = Game.getMouse().y() / Tile.HEIGHT;
 			if(blockId == 3) {
-				CreatorWorld world = ((CreatorWorld)Game.getWorld());
 				if(world.getBlobAt(tx, ty) == null && world.getTile(tx, ty).getId() == Tiles.AIR.getId())
 					world.addBlobAt(tx, ty);
 			} else {
-				Game.getWorld().setTile(tx, ty, Tiles.getById(blockId));
+				world.setTile(tx, ty, Tiles.getById(blockId));
 			}
-			Game.getWorld().checkConnections();
+			world.checkConnections();
 		} else if(Game.getMouse().buttonDown(3)) {
 			int tx = Game.getMouse().x() / Tile.WIDTH;
 			int ty = Game.getMouse().y() / Tile.HEIGHT;
-			CreatorWorld world = ((CreatorWorld)Game.getWorld());
 			if(world.getTile(tx, ty).getId() != Tiles.AIR.getId()) {
 				world.setTile(tx, ty, Tiles.AIR);
 			}
 			if(world.getBlobAt(tx, ty) != null) {
 				world.removeBlobAt(tx, ty);
 			}
-			Game.getWorld().checkConnections();
+			world.checkConnections();
 		}
 	}
 	
 	public void render() {
-		int width = Game.getWorld().getWidth();
-		int height = Game.getWorld().getHeight();
+		int width = Game.getLevel().getWorld().getWidth();
+		int height = Game.getLevel().getWorld().getHeight();
 		
-		Game.getWorld().render();
+		Game.getLevel().getWorld().render();
 		for(int y=0; y<height; y++) {
 			for(int x=0; x<width; x++) {
 				ImageManager.render("CREATOR_RED_GRID", x * Tile.WIDTH, y * Tile.HEIGHT, 1);

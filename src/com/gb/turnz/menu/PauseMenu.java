@@ -45,7 +45,7 @@ public class PauseMenu extends Menu {
 	}
 	
 	public void render() {
-		Game.getWorld().render();
+		Game.getLevel().getWorld().render();
 		Screen.fade(100);
 		
 		super.render();

@@ -7,19 +7,19 @@ import com.gb.turnz.graphics.Font;
 public class ScoreMenu extends Menu {
 	
 	private long millisTaken = Long.MAX_VALUE;
-	private int diskCollect = 0;
+//	private int diskCollect = 0;
 	
 	public ScoreMenu(Game game, long millisTaken, int diskCollect) {
 		super(game);
 		this.millisTaken = millisTaken;
-		this.diskCollect = diskCollect;
+//		this.diskCollect = diskCollect;
 		init();
 	}
 	
 	public ScoreMenu(Menu menu, long millisTaken, int diskCollect) {
 		super(menu);
 		this.millisTaken = millisTaken;
-		this.diskCollect = diskCollect;
+//		this.diskCollect = diskCollect;
 		init();
 	}
 	
@@ -40,10 +40,8 @@ public class ScoreMenu extends Menu {
 	}
 	
 	public void render() {
-		Game.getWorld().render();
+		Game.getLevel().getWorld().render();
 		Screen.fade(100);
-		
-		
 		
 		super.render();
 	}

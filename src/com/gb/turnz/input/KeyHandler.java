@@ -8,6 +8,7 @@ import com.gb.turnz.base.Game;
 public class KeyHandler implements KeyListener {
 
 	private static final int KEY_COUNT = 256;
+	
 
 	private enum KeyState {
 		RELEASED,

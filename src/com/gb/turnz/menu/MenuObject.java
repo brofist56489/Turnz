@@ -1,7 +1,9 @@
 package com.gb.turnz.menu;
 
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 
+import com.gb.turnz.base.Game;
 import com.gb.turnz.graphics.Font;
 import com.gb.turnz.graphics.ImageManager;
 import com.gb.turnz.graphics.Screen;
@@ -40,48 +42,51 @@ public abstract class MenuObject {
 	public abstract void onNotHover();
 
 	public abstract void render();
-	
+
 	public static class Text extends MenuObject {
 
 		protected String text;
+
 		public Text(String text, int x, int y) {
 			super(x, y, text.length() * Font.getWidth(), Font.getHeight());
 			this.text = text.trim();
 			color = 0xffffff;
 		}
-		
+
 		public Text(String text, int x, int y, int color) {
 			super(x, y, text.length() * Font.getWidth(), Font.getHeight());
 			this.text = text.trim();
 			this.color = color;
 		}
-		
+
 		public void render() {
 			Font.render(text, x + ((width - (text.length() * Font.getWidth())) / 2), y, color);
 		}
 
 		public void onClick() {
-			
+
 		}
 
 		public void onHover() {
-			
+
 		}
 
 		public void onNotHover() {
-			
+
 		}
 	}
 
 	public static class Button extends Text {
 
+		private int backupColor = 0x000000;
 		public Button(int x, int y, String text) {
 			super(text, x, y, 0x000000);
 		}
-		
+
 		public Button(int x, int y, String text, int color) {
 			this(x, y, text);
 			this.color = color;
+			backupColor = color;
 		}
 
 		public void render() {
@@ -98,7 +103,7 @@ public abstract class MenuObject {
 		}
 
 		public void onNotHover() {
-			color = 0x000000;
+			color = backupColor;
 		}
 	}
 
@@ -152,15 +157,63 @@ public abstract class MenuObject {
 		public void onNotHover() {
 			color = 0x0;
 		}
-		
+
 		public void apply() {
-			
+
 		}
 
 		public void render() {
 			Screen.renderRect(x, y, width, height, color);
 			Font.render(option, x, y);
 			Font.render(renderString, x + (int) (width - (renderString.length() * Font.getWidth())), y);
+		}
+	}
+
+	public static class TextBox extends MenuObject {
+
+		private boolean selected = true;
+		private boolean renderCursor = false;
+		
+		private String msg = "";
+
+		public TextBox(int x, int y, int chars) {
+			super(x, y, chars * (Font.getWidth()), Font.getHeight());
+		}
+
+		public void tick() {
+			if (selected) {
+				for (int i = 0; i < 256; i++) {
+					if (Game.getKeyboard().isKeyDownOnce(i)) {
+						msg += (char) i;
+					}
+				}
+				if (Game.getKeyboard().isKeyDownOnce(KeyEvent.VK_BACK_SPACE)) {
+					if(msg.length() >= 2)
+						msg = msg.substring(0, msg.length() - 2);
+					else
+						msg = "";
+				}
+				renderCursor = (System.currentTimeMillis() % 1000) > 500;
+			}
+		}
+
+		public void onClick() {
+
+		}
+
+		public void render() {
+			tick();
+			Screen.renderRect(x - 5, y - 5, width + 10, height + 10, 0xffffff);
+			Screen.renderRect(x, y, width, height, 0x0);
+			
+			Font.render(msg + (renderCursor ? ">" : ""), x, y);
+
+		}
+
+		public void onHover() {
+		}
+
+		public void onNotHover() {
 		}
 	}
 }

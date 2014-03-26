@@ -4,13 +4,12 @@ import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import com.gb.turnz.util.Logger;
+import com.gb.turnz.level.Level;
 import com.gb.turnz.graphics.Screen;
 import com.gb.turnz.input.KeyHandler;
 import com.gb.turnz.input.MouseHandler;
-import com.gb.turnz.level.World;
 import com.gb.turnz.menu.MainMenu;
 import com.gb.turnz.menu.Menu;
 
@@ -30,22 +29,23 @@ public class Game extends Canvas implements Runnable {
 	private static Thread mainThread;
 	private static boolean running = false;
 
-	private static World world;
+	private static Level level;
 	private static Menu menu;
 
 	public void init() {
 		instance = this;
+		
+		level = new Level();
 
-		World.init();
 		requestFocusInWindow();
 		random = new Random();
-		logger = Logger.getLogger(Game.class.getName());
-		logger.setLevel(Level.WARNING);
+		logger = new Logger();
+		logger.setLevel(Logger.INFO);
+		
 		mouse = new MouseHandler();
 		keyboard = new KeyHandler();
-
+		logger.log("Hello, " + System.getProperty("user.name"));
 		menu = new MainMenu(this);
-		logger.log(Level.INFO, getApplicationDataFolder());
 	}
 
 	public void tick() {
@@ -67,6 +67,7 @@ public class Game extends Canvas implements Runnable {
 
 		menu.render();
 
+//		Screen.finalizeLighting();
 //		ImageManager.render("pickleMouse", mouse.x() - 4, mouse.y() - 4, 0);
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(Screen.getImage(), 0, 0, getWidth(), getHeight(), null);
@@ -106,7 +107,7 @@ public class Game extends Canvas implements Runnable {
 
 			if (System.currentTimeMillis() - lastTimer >= 1000) {
 				lastTimer += 1000;
-				logger.log(Level.INFO, ticks + " ticks, " + frames + " frames");
+				logger.log(ticks + " ticks, " + frames + " frames");
 				ticks = frames = 0;
 			}
 		}
@@ -140,8 +141,8 @@ public class Game extends Canvas implements Runnable {
 		return keyboard;
 	}
 
-	public static World getWorld() {
-		return world;
+	public static Level getLevel() {
+		return level;
 	}
 
 	public static Random getRandom() {
@@ -170,10 +171,6 @@ public class Game extends Canvas implements Runnable {
 
 	public static void setSFX(boolean sfx) {
 		Game.sfx = sfx;
-	}
-
-	public static void setWorld(World world) {
-		Game.world = world;
 	}
 
 	public static String getApplicationDataFolder() {

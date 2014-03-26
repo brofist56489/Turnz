@@ -34,5 +34,6 @@ public class OptionsMenu extends Menu {
 				Game.setMusic(active);
 			}
 		});
+		addObject(new MenuObject.TextBox(26, 160, 19));
 	}
 }

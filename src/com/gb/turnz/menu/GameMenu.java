@@ -3,29 +3,26 @@ package com.gb.turnz.menu;
 import java.awt.event.KeyEvent;
 
 import com.gb.turnz.base.Game;
-import com.gb.turnz.level.World;
+import com.gb.turnz.level.Level;
 
 public class GameMenu extends Menu {
-
-	private World world;
 	
 	public GameMenu(Game game) {
 		super(game);
-		world = Game.getWorld();
 	}
 
 	public GameMenu(Menu menu) {
 		super(menu);
-		world = Game.getWorld();
 	}
 	
 	public void tick() {
-		world.tick();
+		Level level = Game.getLevel();
+		level.tick();
 		if(Game.getKeyboard().isKeyDownOnce(KeyEvent.VK_RIGHT)) {
-			world.initializeRotation(1);
+			level.getWorld().initializeRotation(1);
 		}
 		if(Game.getKeyboard().isKeyDownOnce(KeyEvent.VK_LEFT)) {
-			world.initializeRotation(0);
+			level.getWorld().initializeRotation(0);
 		}
 		if(Game.getKeyboard().isKeyDownOnce(KeyEvent.VK_ESCAPE)) {
 			Game.setMenu(new PauseMenu(this));
@@ -33,6 +30,6 @@ public class GameMenu extends Menu {
 	}
 	
 	public void render() {
-		world.render();
+		Game.getLevel().getWorld().render();
 	}
 }
