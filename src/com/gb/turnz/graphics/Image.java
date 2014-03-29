@@ -57,6 +57,11 @@ public class Image {
 		this.loadedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 	}
 
+	public Image(BufferedImage img) {
+		loadedImage = img;
+		pixels = img.getRGB(0, 0, width, height, null, width, 0);
+	}
+
 	/**
 	 * @return a brand new image
 	 */

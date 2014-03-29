@@ -18,6 +18,8 @@ public class World {
 	protected boolean canRotate = true;
 	protected int rotation = 0;
 	protected int rotateDir = -1;
+	
+	protected Image image;
 
 	public World() {
 		tiles = new Tile[width][height];
@@ -28,8 +30,8 @@ public class World {
 		}
 	}
 	
-	public World(String world) {
-		loadFromImage(new Image(world));
+	public World(Image img) {
+		loadFromImage(img);
 	}
 
 	public World(Tile[][] t, List<Blob> b) {
@@ -40,6 +42,8 @@ public class World {
 	public World loadFromImage(Image img) {
 		if (img.getPixels() == null)
 			return null;
+		
+		this.image = img;
 		tiles = new Tile[width][height];
 		int[] imgPixels = img.getPixels();
 		for (int y = 0; y < img.getHeight(); y++) {
@@ -207,6 +211,10 @@ public class World {
 
 	public int getHeight() {
 		return height;
+	}
+	
+	public Image getImage() {
+		return image;
 	}
 
 	public World makeCopy() {

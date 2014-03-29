@@ -7,7 +7,7 @@ public class Program {
 		 Game game = new Game();
 		 Screen.makeJFrame(game);
 		 game.start();
-//
+
 //		Scanner input = new Scanner(System.in);
 //
 //		System.out.println("Client or server?");
@@ -23,27 +23,29 @@ public class Program {
 //				System.out.println("Message: ");
 //				String msg = input.nextLine();
 //				connection.write(msg);
-//				if(msg.equals("close")) {
+//				if (msg.equals("close")) {
 //					connection.close();
 //				}
 //				System.out.println(connection.read());
 //			}
 //		} else if (type.startsWith("s")) {
+//			System.out.println(ServerConnection.getExternalIp());
 //			connection = new ServerConnection();
 //			while (true) {
 //				String recemsg = connection.read();
-//				if(recemsg.equals("close")) {
+//				if (recemsg.equals("close")) {
 //					connection.close();
 //				}
 //				System.out.println(recemsg);
 //				System.out.println("Message: ");
 //				String msg = input.nextLine();
 //				connection.write(msg);
-//				if(msg.equals("close")) {
+//				if (msg.equals("close")) {
 //					connection.close();
 //					break;
 //				}
 //			}
 //		}
+//		input.close();
 	}
 }

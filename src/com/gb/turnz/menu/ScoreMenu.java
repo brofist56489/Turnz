@@ -1,33 +1,34 @@
 package com.gb.turnz.menu;
 
-import com.gb.turnz.base.Game; 
-import com.gb.turnz.graphics.Screen;
+import java.util.HashMap;
+
+import com.gb.turnz.base.Game;
 import com.gb.turnz.graphics.Font;
+import com.gb.turnz.graphics.Screen;
 
 public class ScoreMenu extends Menu {
+	private int numOfPlayers = -1;
 	
-	private long millisTaken = Long.MAX_VALUE;
-//	private int diskCollect = 0;
+	private HashMap<String, Integer> scores;
 	
-	public ScoreMenu(Game game, long millisTaken, int diskCollect) {
-		super(game);
-		this.millisTaken = millisTaken;
-//		this.diskCollect = diskCollect;
-		init();
-	}
-	
-	public ScoreMenu(Menu menu, long millisTaken, int diskCollect) {
+	public ScoreMenu(Menu menu, HashMap<String, Integer> scores) {
 		super(menu);
-		this.millisTaken = millisTaken;
-//		this.diskCollect = diskCollect;
+		this.scores = scores;
+		numOfPlayers = scores.size();
 		init();
 	}
 	
 	private void init() {
+		String title = "Score" + ((numOfPlayers > 1) ? "s" : "");
+		addObject(new MenuObject.Text(title, Font.getScreenCenterX(title), 30));
 		
-		addObject(new MenuObject.Text("Score(s)", Font.getScreenCenterX("Score(s)"), 30));
-		
-		addObject(new MenuObject.Text("Player 1:\t\t\t\t\t" + millisTaken, Font.getScreenCenterX("Player 1:\t\t\t\t\t" + millisTaken), 75));
+		int i = 0;
+		for(String name : scores.keySet()) {
+			int score = scores.get(name);
+			String msg = name + ":\t\t\t\t\t" + score;
+			addObject(new MenuObject.Text(msg, Font.getScreenCenterX(msg), i * 50 + 40));
+			i++;
+		}
 		
 		addObject(new MenuObject.Button(Font.getScreenCenterX("Continue"), 300, "Continue", 0x7f007f) {
 			public void onClick() {

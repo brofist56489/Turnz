@@ -6,12 +6,13 @@ import java.io.IOException;
 
 import com.gb.turnz.util.Constants;
 
-public abstract class Connection {
+public abstract class Connection implements Runnable {
 	DataInputStream dis;
 	DataOutputStream dos;
 	
 	protected abstract void setupConnection();
 	
+	protected boolean running = false;
 	protected int port = Constants.DEFAULT_PORT; //Default is 2472
 	
 	public String read() {
@@ -51,6 +52,23 @@ public abstract class Connection {
 			e.printStackTrace();
 		}
 		closeSockets();
+	}
+	
+	public Connection start() {
+		if(running)
+			return null;
+		running = true;
+		Thread thr = new Thread(this, "CONNECTION");
+		thr.start();
+		return this;
+	}
+	
+	public void run() {
+		setupConnection();
+		
+		while(running) {
+			String data = read();
+		}
 	}
 	
 	protected abstract void closeSockets();

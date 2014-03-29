@@ -2,11 +2,13 @@ package com.gb.turnz.menu;
 
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import com.gb.turnz.base.Game;
 import com.gb.turnz.graphics.Font;
 import com.gb.turnz.graphics.ImageManager;
 import com.gb.turnz.graphics.Screen;
+import com.gb.turnz.input.KeyHandler.Key;
 
 public abstract class MenuObject {
 
@@ -79,6 +81,7 @@ public abstract class MenuObject {
 	public static class Button extends Text {
 
 		private int backupColor = 0x000000;
+
 		public Button(int x, int y, String text) {
 			super(text, x, y, 0x000000);
 		}
@@ -171,25 +174,31 @@ public abstract class MenuObject {
 
 	public static class TextBox extends MenuObject {
 
-		private boolean selected = true;
-		private boolean renderCursor = false;
+		private ButtonGroup boxes;
 		
+		private boolean selected = false;
+		private boolean renderCursor = false;
+		private int chars = 0;
+
 		private String msg = "";
 
 		public TextBox(int x, int y, int chars) {
 			super(x, y, chars * (Font.getWidth()), Font.getHeight());
+			this.chars = chars;
 		}
 
 		public void tick() {
 			if (selected) {
-				for (int i = 0; i < 256; i++) {
-					if (Game.getKeyboard().isKeyDownOnce(i)) {
-						msg += (char) i;
+				for (Key k : Key.keys) {
+					if (Game.getKeyboard().isKeyDownOnce(k.code) && !(msg.length() >= chars)) {
+						if(k.code < 90)
+							msg += (char) k.code;
+						else msg += (char) (k.code - 48);
 					}
 				}
 				if (Game.getKeyboard().isKeyDownOnce(KeyEvent.VK_BACK_SPACE)) {
-					if(msg.length() >= 2)
-						msg = msg.substring(0, msg.length() - 2);
+					if (msg.length() >= 1)
+						msg = msg.substring(0, msg.length() - 1);
 					else
 						msg = "";
 				}
@@ -198,15 +207,17 @@ public abstract class MenuObject {
 		}
 
 		public void onClick() {
-
+			selected = true;
+			if(boxes != null)
+				boxes.deselectOthers(this);
 		}
 
 		public void render() {
 			tick();
-			Screen.renderRect(x - 5, y - 5, width + 10, height + 10, 0xffffff);
-			Screen.renderRect(x, y, width, height, 0x0);
-			
-			Font.render(msg + (renderCursor ? ">" : ""), x, y);
+			Screen.renderRect(x - 5, y - 5, width + 10 + Font.getWidth(), height + 10, 0xffffff);
+			Screen.renderRect(x, y, width + Font.getWidth(), height, 0x0);
+
+			Font.render(msg + (renderCursor ? "|" : ""), x, y);
 
 		}
 
@@ -214,6 +225,60 @@ public abstract class MenuObject {
 		}
 
 		public void onNotHover() {
+		}
+
+		public void unSelect() {
+			selected = false;
+		}
+		
+		public void setBoxes(ButtonGroup group) {
+			boxes = group;
+		}
+		
+		public String getText() {
+			return msg.trim();
+		}
+	}
+
+	public static class ButtonGroup extends MenuObject {
+
+		private ArrayList<TextBox> boxes = null;
+
+		public ButtonGroup() {
+			super(0, 0, 0, 0);
+			boxes = new ArrayList<TextBox>();
+		}
+
+		public void add(TextBox t) {
+			boxes.add(t);
+			t.setBoxes(this);
+		}
+
+		@Override
+		public void onClick() {
+
+		}
+
+		@Override
+		public void onHover() {
+
+		}
+
+		@Override
+		public void onNotHover() {
+
+		}
+
+		@Override
+		public void render() {
+
+		}
+		
+		public void deselectOthers(TextBox t) {
+			for(TextBox b : boxes) {
+				if(!b.equals(t)) 
+					b.unSelect();
+			}
 		}
 	}
 }

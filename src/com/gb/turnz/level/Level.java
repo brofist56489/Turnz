@@ -15,6 +15,8 @@ public class Level {
 		"/worlds/compare.lvl"
 	};
 	
+	private int score;
+	
 	private World world;
 	
 	public Level() {
@@ -28,17 +30,28 @@ public class Level {
 				won = false;
 		}
 		if (won) {
-			Game.getLogger().log("Worked");
 			win();
 		}
 	}
 	
 	public void win() {
 		String OS = System.getProperty("os.name").toUpperCase();
-		if(OS.contains("WIN"))
-			Game.setMenu(new ScoreMenu(Game.getInstance(), 9001L, 2));
-		if(OS.contains("MAC"))
-			Game.setMenu(new ScoreMenu(Game.getInstance(), 0, 2));
+//		if(OS.contains("WIN"))
+//			Game.setMenu(new ScoreMenu(Game.getInstance(), 100, 2));
+//		if(OS.contains("MAC"))
+//			Game.setMenu(new ScoreMenu(Game.getInstance(), 0, 2));
+	}
+	
+	public int getScore() {
+		return score;
+	}
+	
+	public void changeScore(int s) {
+		score += s;
+	}
+	
+	public void setScore(int s) {
+		score = s;
 	}
 	
 	public void setWorld(String world) {

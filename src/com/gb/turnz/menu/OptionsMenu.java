@@ -2,8 +2,10 @@ package com.gb.turnz.menu;
 
 import com.gb.turnz.base.Game;
 import com.gb.turnz.graphics.Font;
+import com.gb.turnz.util.Constants;
 
 public class OptionsMenu extends Menu {
+	MenuObject.TextBox port;
 
 	public OptionsMenu(Game game) {
 		super(game);
@@ -21,6 +23,7 @@ public class OptionsMenu extends Menu {
 		
 		addObject(new MenuObject.Button(136, 300, "Done") {
 			public void onClick() {
+				Constants.PORT = Integer.parseInt(port.getText());
 				Game.setMenu(parentMenu);
 			}
 		});
@@ -34,6 +37,19 @@ public class OptionsMenu extends Menu {
 				Game.setMusic(active);
 			}
 		});
-		addObject(new MenuObject.TextBox(26, 160, 19));
+		
+		addObject(new MenuObject.Text("Host Port:", 26, 160));
+		port = new MenuObject.TextBox(226, 160, 5);
+		addObject(port);
+		
+//		ButtonGroup group = new ButtonGroup();
+//		MenuObject.TextBox box1 = new MenuObject.TextBox(26, 160, 10);
+//		MenuObject.TextBox box2 = new MenuObject.TextBox(50 + (10 * Font.getWidth()), 150, 5);
+//		
+//		group.add(box1);
+//		group.add(box2);
+//		
+//		addObject(box1);
+//		addObject(box2);
 	}
 }

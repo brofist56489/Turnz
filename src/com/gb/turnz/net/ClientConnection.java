@@ -5,32 +5,33 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import javax.imageio.ImageIO;
+
+import com.gb.turnz.graphics.Image;
+import com.gb.turnz.level.World;
+import com.gb.turnz.util.Constants;
+
 public class ClientConnection extends Connection {
 
 	private Socket server;
 
 	private String ip;
 
-	private int port;
+	private int port = Constants.DEFAULT_PORT;
 
-	public ClientConnection(String ipwp) {
-		if (ipwp.contains(":")) {
-			String[] adds = ipwp.split(":");
-			ip = adds[0];
-			port = Integer.parseInt(adds[1]);
-		} else {
-			ip = ipwp;
-			port = Integer.parseInt("2472");
+	public ClientConnection(String ip, int port) {
+		if (port != -1) {
+			this.port = port;
 		}
-		setupConnection();
-		
+		this.ip = ip;
 	}
 
 	protected void setupConnection() {
 		try {
 			server = new Socket(ip, port);
 		} catch (IOException e) {
-			//TODO: Can't connect menu
+			// TODO: Can't connect menu
+			System.out.println("Connection Timeout!");
 			e.printStackTrace();
 		}
 
@@ -41,12 +42,22 @@ public class ClientConnection extends Connection {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void closeSockets() {
 		try {
 			server.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public World receiveWorld() {
+		World world = new World();
+		try {
+			world.loadFromImage(new Image(ImageIO.read(dis)));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return world;
 	}
 }

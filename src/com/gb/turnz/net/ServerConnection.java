@@ -1,28 +1,46 @@
 package com.gb.turnz.net;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URL;
+
+import javax.imageio.ImageIO;
+
+import com.gb.turnz.level.World;
+import com.gb.turnz.util.Constants;
 
 public class ServerConnection extends Connection {
 
+	@FunctionalInterface
+	public static interface ConnectionCallback {
+		public abstract void call(ServerConnection conn);
+	}
+
 	private ServerSocket server;
 	private Socket client;
-	
-	public ServerConnection() {
-		setupConnection();
+
+	private ConnectionCallback setupCallback;
+
+	public ServerConnection(ConnectionCallback setupCallback) {
+		this.setupCallback = setupCallback;
 	}
-	
+
 	protected void setupConnection() {
 		try {
-			server = new ServerSocket(port);
+			server = new ServerSocket(Constants.PORT);
 			server.setSoTimeout(100000);
 			client = server.accept();
-			
+
 			dos = new DataOutputStream(client.getOutputStream());
 			dis = new DataInputStream(client.getInputStream());
+			System.out.println("CONNECTION ESTABLISHED");
+
+			setupCallback.call(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -32,6 +50,24 @@ public class ServerConnection extends Connection {
 		try {
 			server.close();
 			client.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static String getExternalIp() {
+		try {
+			return new BufferedReader(new InputStreamReader(new URL("http://agentgatech.appspot.com").openStream())).readLine();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "NULL";
+	}
+
+	public void sendWorld(World world) {
+		try {
+			ImageIO.write(world.getImage().getBufferedImage(), "PNG", dos);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

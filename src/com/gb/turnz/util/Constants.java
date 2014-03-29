@@ -5,4 +5,6 @@ public final class Constants {
 	
 	public static int RED_DISK_VALUE = 500;
 	public static int BLUE_DISK_VALUE = 300;
+	
+	public static int PORT = DEFAULT_PORT;
 }

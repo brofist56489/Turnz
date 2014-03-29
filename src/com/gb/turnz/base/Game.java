@@ -156,6 +156,10 @@ public class Game extends Canvas implements Runnable {
 	public static void setMenu(Menu menu) {
 		Game.menu = menu;
 	}
+	
+	public static void setLevel(Level l) {
+		Game.level = l;
+	}
 
 	public static boolean sfxOn() {
 		return sfx;
