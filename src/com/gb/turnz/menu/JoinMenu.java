@@ -17,27 +17,27 @@ public class JoinMenu extends Menu {
 		super(menu);
 		init();
 	}
-	
+
 	private void init() {
 		addObject(new MenuObject.Text("IP: ", 10, 50));
 		addObject(new MenuObject.Text("Port: ", 10, 100));
-		
+
 		MenuObject.TextBox ip, port;
 		ButtonGroup group = new ButtonGroup();
 		ip = new MenuObject.TextBox(Font.getWidth() * 4 + 20, 50, 15);
 		port = new MenuObject.TextBox(Font.getWidth() * 6 + 20, 100, 6);
-		
+		ip.setText("96.2.8.17");
+		port.setText("2472");
 		addObject(new MenuObject.Button(Font.getScreenCenterX("Connect"), 300, "Connect") {
 			public void onClick() {
 				((MultiplayerLevel) Game.getLevel()).setConnection(new ClientConnection(ip.getText(), Integer.parseInt(port.getText())).start());
-				
+				Game.setMenu(new WaitingMenu(new MainMenu(Game.getInstance())));
 			}
 		});
-		
+
 		group.add(ip);
 		group.add(port);
 		addObject(ip);
 		addObject(port);
 	}
-
 }

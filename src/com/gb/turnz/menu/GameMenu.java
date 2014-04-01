@@ -3,6 +3,7 @@ package com.gb.turnz.menu;
 import java.awt.event.KeyEvent;
 
 import com.gb.turnz.base.Game;
+import com.gb.turnz.graphics.Font;
 import com.gb.turnz.graphics.ImageManager;
 import com.gb.turnz.graphics.Screen;
 import com.gb.turnz.level.Level;
@@ -13,6 +14,8 @@ public class GameMenu extends Menu {
 		ImageManager.addImage("/textures/arrows/left.png", "arrow-left");
 		ImageManager.addImage("/textures/arrows/right.png", "arrow-right");
 	}
+	
+	LevelSelector ls;
 	
 	public GameMenu(Game game) {
 		super(game);
@@ -25,6 +28,8 @@ public class GameMenu extends Menu {
 	}
 	
 	private void init() {
+		this.showBorder = false;
+		Game.getLevel().setScore(0);
 		addObject(new MenuObject.MenuImage("arrow-right", Screen.WIDTH / 2 - 34, Screen.HEIGHT - 32) {
 			public void onClick() {
 				Game.getLevel().getWorld().initializeRotation(0);
@@ -37,7 +42,16 @@ public class GameMenu extends Menu {
 		});
 	}
 	
+	public void switchedTo() {
+		if(ls == null)
+			ls = new LevelSelector(this, parentMenu);
+		else
+			return;
+		Game.setMenu(ls);
+	}
+	
 	public void tick() {
+		if(Game.getLevel().getWorld() == null) return;
 		Level level = Game.getLevel();
 		level.tick();
 		if(Game.getKeyboard().isKeyDownOnce(KeyEvent.VK_RIGHT)) {
@@ -54,7 +68,14 @@ public class GameMenu extends Menu {
 	}
 	
 	public void render() {
+		if(Game.getLevel().getWorld() == null) return;
 		Game.getLevel().getWorld().render();
-		super.render();
+		
+		for (int i = 0; i < objects.size(); i++) {
+			objects.get(i).render();
+		}
+		
+		int score = Game.getLevel().getScore();
+		Font.render(score+"", 5, Screen.HEIGHT - 32, (score < 0) ? 0xff0000 : 0x00ff00);
 	}
 }

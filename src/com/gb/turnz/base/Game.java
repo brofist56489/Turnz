@@ -40,7 +40,7 @@ public class Game extends Canvas implements Runnable {
 		requestFocusInWindow();
 		random = new Random();
 		logger = new Logger();
-		logger.setLevel(Logger.INFO);
+		logger.setLevel(Logger.WARNING);
 		
 		mouse = new MouseHandler();
 		keyboard = new KeyHandler();
@@ -155,6 +155,7 @@ public class Game extends Canvas implements Runnable {
 
 	public static void setMenu(Menu menu) {
 		Game.menu = menu;
+		menu.switchedTo();
 	}
 	
 	public static void setLevel(Level l) {

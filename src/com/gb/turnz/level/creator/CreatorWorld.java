@@ -10,7 +10,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import com.gb.turnz.graphics.Screen;
-import com.gb.turnz.level.Blob;
 import com.gb.turnz.level.World;
 import com.gb.turnz.level.tile.Tile;
 
@@ -23,26 +22,6 @@ public class CreatorWorld extends World {
 				tiles[x][y] = Tile.newTile(0);
 			}
 		}
-	}
-	
-	public void removeBlobAt(int x, int y) {
-		for(int i=0; i<blobs.size(); i++) {
-			Blob b = blobs.get(i);
-			if(b.getX() == x && b.getY() == y) {
-				blobs.remove(i);
-				break;
-			}
-		}
-	}
-	
-	public Blob getBlobAt(int x, int y) {
-		for(int i=0; i<blobs.size(); i++) {
-			Blob b = blobs.get(i);
-			if(b.getX() == x && b.getY() == y) {
-				return b;
-			}
-		}
-		return null;
 	}
 	
 	public void saveToFile() {
@@ -78,9 +57,5 @@ public class CreatorWorld extends World {
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(Screen.getFrame(), "There was an error exporting your world!");
 		}
-	}
-	
-	public void addBlobAt(int x, int y) {
-		addBlob(new Blob(x, y, this));
 	}
 }

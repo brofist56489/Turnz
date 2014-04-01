@@ -2,7 +2,7 @@ package com.gb.turnz.menu;
 
 import com.gb.turnz.base.Game;
 import com.gb.turnz.graphics.Font;
-import com.gb.turnz.graphics.Screen;
+import com.gb.turnz.util.Constants;
 
 public class PlayMenu extends Menu {
 
@@ -16,7 +16,7 @@ public class PlayMenu extends Menu {
 
 		addObject(new MenuObject.Button(Font.getScreenCenterX("Single Player"), 100, "Single Player") {
 			public void onClick() {
-				Game.setMenu(new LevelSelector(new GameMenu(Game.getInstance())));
+				Game.setMenu(new GameMenu(menu));
 			}
 		});
 
@@ -26,7 +26,7 @@ public class PlayMenu extends Menu {
 			}
 		});
 
-		addObject(new MenuObject.Button(Font.getScreenCenterX("Back"), Screen.HEIGHT - 50, "Back") {
+		addObject(new MenuObject.Button(Font.getScreenCenterX("Back"), Constants.BACK_BUTTON_Y, "Back") {
 			public void onClick() {
 				Game.setMenu(parentMenu);
 			}

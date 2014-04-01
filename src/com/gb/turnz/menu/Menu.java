@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.gb.turnz.base.Game;
+import com.gb.turnz.graphics.ImageManager;
 
 public abstract class Menu {
 	protected List<MenuObject> objects = new ArrayList<MenuObject>();
 	protected Game game;
 	protected Menu parentMenu;
 	protected MenuObject hoverObject;
+	
+	protected boolean showBorder = true;
 
 	public Menu(Menu menu) {
 		this.game = menu.game;
@@ -53,6 +56,10 @@ public abstract class Menu {
 	public void onClick() {
 
 	}
+	
+	public void switchedTo() {
+		
+	}
 
 	public void render() {
 		
@@ -64,6 +71,8 @@ public abstract class Menu {
 //			double height = Screen.HEIGHT * (Screen.HEIGHT / (float)this.height);
 //			Screen.renderRect(Screen.WIDTH - 10, (int)(Screen.HEIGHT * scroll / height) / 2 + Screen.getYoff() / 2, 8, (int)height, 0x7f7f7f);
 //		}
+		if(showBorder)
+			ImageManager.render("menuBorder", 0, 0, 0);
 	}
 
 }

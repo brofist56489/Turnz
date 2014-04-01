@@ -144,4 +144,8 @@ public class Image {
 	public BufferedImage getBufferedImage() {
 		return loadedImage;
 	}
+	
+	public static int getScreenCenterX(String imName) {
+		return (Screen.WIDTH - (ImageManager.getImage(imName).getWidth())) / 2;
+	}
 }

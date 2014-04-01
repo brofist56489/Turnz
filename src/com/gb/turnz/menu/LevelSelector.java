@@ -10,17 +10,30 @@ import com.gb.turnz.graphics.ImageManager;
 import com.gb.turnz.graphics.Screen;
 import com.gb.turnz.level.Level;
 import com.gb.turnz.level.World;
+import com.gb.turnz.util.Constants;
 
 public class LevelSelector extends Menu {
 
-	public LevelSelector(Game game) {
-		super(game);
+	private LevelSelector(Menu m) {
+		super(m);
+	}
+
+	private Menu successMenu;
+	private Menu backMenu;
+
+	public LevelSelector(Menu successMenu, Menu backMenu) {
+		super((Game) null);
+		this.successMenu = successMenu;
+		this.backMenu = backMenu;
 		init();
 	}
 
-	public LevelSelector(Menu menu) {
-		super(menu);
-		init();
+	public void addObject(MenuObject o) {
+		o.setMenu(this);
+		objects.add(o);
+		if (o instanceof LevelSelectorButton) {
+			((LevelSelectorButton) o).succMenu = successMenu;
+		}
 	}
 
 	private void init() {
@@ -45,7 +58,13 @@ public class LevelSelector extends Menu {
 				Image image = new Image(path, ImageLocation.EXTERNAL);
 				world.loadFromImage(image);
 				world.checkConnections();
-				Game.setMenu(parentMenu);
+				Game.setMenu(successMenu);
+			}
+		});
+
+		addObject(new MenuObject.Button(Font.getScreenCenterX("Back"), Constants.BACK_BUTTON_Y, "Back") {
+			public void onClick() {
+				Game.setMenu(backMenu);
 			}
 		});
 	}
@@ -53,6 +72,7 @@ public class LevelSelector extends Menu {
 	private static class LevelSelectorButton extends MenuObject.Button {
 
 		private String levelName;
+		public Menu succMenu;
 
 		public LevelSelectorButton(int x, int y, String text, String levelName) {
 			super(x, y, text);
@@ -62,7 +82,7 @@ public class LevelSelector extends Menu {
 		public void onClick() {
 			Level level = Game.getLevel();
 			level.setWorld(levelName);
-			Game.setMenu(menu.parentMenu);
+			Game.setMenu(succMenu);
 		}
 	}
 }

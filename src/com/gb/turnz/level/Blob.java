@@ -1,9 +1,11 @@
 package com.gb.turnz.level;
 
+import com.gb.turnz.base.Game;
 import com.gb.turnz.graphics.ImageManager;
 import com.gb.turnz.graphics.Light;
 import com.gb.turnz.level.tile.Tile;
 import com.gb.turnz.level.tile.Tile.Tiles;
+import com.gb.turnz.util.Constants;
 
 public class Blob {
 	
@@ -34,12 +36,12 @@ public class Blob {
 		reachedEnd = t.getId() == Tiles.FINISH.getId();
 		
 		if(t.getId() == Tiles.RED_DISK.getId()) {
-			//TODO: add to score here
+			Game.getLevel().changeScore(Constants.RED_DISK_VALUE);
 			world.setTile(x, y + 1, Tiles.AIR);
 		}
 		
 		if(t.getId() == Tiles.BLUE_DISK.getId()) {
-			//TODO: add to score here
+			Game.getLevel().changeScore(Constants.BLUE_DISK_VALUE);
 			world.setTile(x, y + 1, Tiles.AIR);
 		}
 		

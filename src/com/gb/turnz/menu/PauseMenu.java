@@ -3,6 +3,7 @@ package com.gb.turnz.menu;
 import com.gb.turnz.base.Game; 
 import com.gb.turnz.graphics.Screen;
 import com.gb.turnz.graphics.Font;
+import com.gb.turnz.util.Constants;
 
 public class PauseMenu extends Menu {
 	
@@ -34,7 +35,7 @@ public class PauseMenu extends Menu {
 				color = 0x7f007f;
 			}
 		});
-		addObject(new MenuObject.Button(Font.getScreenCenterX("Quit"), 300, "Quit", 0x7f007f) {
+		addObject(new MenuObject.Button(Font.getScreenCenterX("Quit"), Constants.BACK_BUTTON_Y, "Quit", 0x7f007f) {
 			public void onClick() {
 				Game.setMenu(new MainMenu(menu));
 			}

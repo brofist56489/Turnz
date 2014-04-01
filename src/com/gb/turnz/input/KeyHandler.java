@@ -141,5 +141,6 @@ public class KeyHandler implements KeyListener {
 		public static Key NP7 = new Key(KeyEvent.VK_NUMPAD7);
 		public static Key NP8 = new Key(KeyEvent.VK_NUMPAD8);
 		public static Key NP9 = new Key(KeyEvent.VK_NUMPAD9);
+		public static Key NP_Period = new Key(KeyEvent.VK_DECIMAL);
 	}
 }

@@ -175,7 +175,7 @@ public abstract class MenuObject {
 	public static class TextBox extends MenuObject {
 
 		private ButtonGroup boxes;
-		
+
 		private boolean selected = false;
 		private boolean renderCursor = false;
 		private int chars = 0;
@@ -191,9 +191,14 @@ public abstract class MenuObject {
 			if (selected) {
 				for (Key k : Key.keys) {
 					if (Game.getKeyboard().isKeyDownOnce(k.code) && !(msg.length() >= chars)) {
-						if(k.code < 90)
-							msg += (char) k.code;
-						else msg += (char) (k.code - 48);
+						if (k.code == 110)
+							msg += ".";
+						else {
+							if (k.code < 90)
+								msg += (char) k.code;
+							else
+								msg += (char) (k.code - 48);
+						}
 					}
 				}
 				if (Game.getKeyboard().isKeyDownOnce(KeyEvent.VK_BACK_SPACE)) {
@@ -208,7 +213,7 @@ public abstract class MenuObject {
 
 		public void onClick() {
 			selected = true;
-			if(boxes != null)
+			if (boxes != null)
 				boxes.deselectOthers(this);
 		}
 
@@ -230,13 +235,17 @@ public abstract class MenuObject {
 		public void unSelect() {
 			selected = false;
 		}
-		
+
 		public void setBoxes(ButtonGroup group) {
 			boxes = group;
 		}
-		
+
 		public String getText() {
 			return msg.trim();
+		}
+
+		public void setText(String s) {
+			msg = s;
 		}
 	}
 
@@ -273,10 +282,10 @@ public abstract class MenuObject {
 		public void render() {
 
 		}
-		
+
 		public void deselectOthers(TextBox t) {
-			for(TextBox b : boxes) {
-				if(!b.equals(t)) 
+			for (TextBox b : boxes) {
+				if (!b.equals(t))
 					b.unSelect();
 			}
 		}

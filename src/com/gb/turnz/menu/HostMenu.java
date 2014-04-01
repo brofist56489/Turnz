@@ -20,7 +20,10 @@ public class HostMenu extends Menu {
 		
 		MultiplayerLevel level = (MultiplayerLevel) Game.getLevel();
 		level.setConnection(new ServerConnection((ServerConnection c) -> {
-			Game.setMenu(new LevelSelector(Game.getInstance()));
+			Game.setMenu(new LevelSelector(new SendWorldMenu(Game.getInstance()), new MainMenu(Game.getInstance())));
 		}).start());
+		level.getConnection().setCallback((conn) -> {
+			
+		});
 	}
 }

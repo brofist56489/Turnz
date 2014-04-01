@@ -58,11 +58,6 @@ public class LevelCreatorToolMenu extends Menu {
 				Game.setMenu(new MainMenu(Game.getInstance()));
 			}
 		});
-		addObject(new TileChoice(10, 10, Tiles.BLUE_WALL));
-		addObject(new TileChoice(50, 10, Tiles.FINISH));
-		addObject(new TileChoice(90, 10, Tiles.BLOB));
-		addObject(new TileChoice(130, 10, Tiles.BLUE_DISK));
-		addObject(new TileChoice(170, 10, Tiles.RED_DISK));
 	}
 
 	public int getBlockId() {
@@ -91,47 +86,15 @@ public class LevelCreatorToolMenu extends Menu {
 				ImageManager.render("CREATOR_RED_GRID", x * Tile.WIDTH, y * Tile.HEIGHT, 1);
 			}
 		}
+		
+		int yv = Screen.HEIGHT - 32;
+		ImageManager.renderFromTileMap("tileMap", 0, yv, 0, 32, 0);
+		ImageManager.renderFromTileMap("tileMap", 40, yv, Tiles.FINISH.getTextureId(), 32, 0);
+		ImageManager.renderFromTileMap("tileMap", 80, yv, Tiles.BLOB.getTextureId(), 32, 0);
+		ImageManager.renderFromTileMap("tileMap", 120, yv, Tiles.BLUE_DISK.getTextureId(), 32, 0);
+		ImageManager.renderFromTileMap("tileMap", 160, yv, Tiles.RED_DISK.getTextureId(), 32, 0);
+		
 		Screen.fade(128);
 		super.render();
-	}
-	
-	private static class TileChoice extends MenuObject {
-
-		private Tiles tile;
-		private boolean hovered;
-		public TileChoice(int x, int y, Tiles t) {
-			super(x, y, 32, 32);
-			this.tile = t;
-			hovered = false;
-		}
-		
-		public void onClick() {
-			LevelCreatorToolMenu menu = (LevelCreatorToolMenu)this.menu;
-			menu.setBlockId(this.tile.getId());
-		}
-
-		public void onHover() {
-			if(!isSelectedTile()) {
-				hovered = true;
-			}
-		}
-
-		public void onNotHover() {
-			hovered = false;
-		}
-		
-		private boolean isSelectedTile() {
-			LevelCreatorToolMenu menu = (LevelCreatorToolMenu)this.menu;
-			return menu.getBlockId() == this.tile.getId();
-		}
-
-		public void render() {
-			if(isSelectedTile()) {
-				Screen.renderRect(x - 2, y - 2, width + 4, height + 4, 0x00ff00);
-			} else if(hovered) {
-				Screen.renderRect(x - 2, y - 2, width + 4, height + 4, 0xff0000);
-			}
-			ImageManager.renderFromTileMap("tileMap", x, y, tile.getTextureId(), 32, 0);
-		}
 	}
 }

@@ -51,13 +51,4 @@ public class ClientConnection extends Connection {
 		}
 	}
 
-	public World receiveWorld() {
-		World world = new World();
-		try {
-			world.loadFromImage(new Image(ImageIO.read(dis)));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return world;
-	}
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gb.turnz.base.Game;
 import com.gb.turnz.graphics.Image;
 import com.gb.turnz.level.tile.ConnectedTile;
 import com.gb.turnz.level.tile.Tile;
@@ -33,6 +34,10 @@ public class World {
 	public World(Image img) {
 		loadFromImage(img);
 	}
+	
+	public World(String path) {
+		this(new Image(path));
+	}
 
 	public World(Tile[][] t, List<Blob> b) {
 		tiles = t;
@@ -59,26 +64,25 @@ public class World {
 		}
 		return this;
 	}
+	
+	public World destringify(String s) {
+		
+		String[] res = s.split(" ");
+		for(int i=0; i<res.length; i++) {
+			setTile(i%width, i/width, Tiles.getById(Integer.parseInt(res[i])));
+		}
+		return this;
+	}
 
 	public void checkConnections() {
+		if(Game.getLevel().getWorld() == null) return;
+		
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 				if (tiles[x][y] instanceof ConnectedTile)
 					((ConnectedTile) tiles[x][y]).checkConnection(x, y);
 			}
 		}
-	}
-
-	public Tile getTile(int x, int y) {
-		if (x < 0 || y < 0 || x >= width || y >= height)
-			return Tile.newTile(4);
-		return tiles[x][y];
-	}
-
-	public void setTile(int x, int y, Tiles tileType) {
-		if (x < 0 || y < 0 || x >= width || y >= height)
-			return;
-		tiles[x][y] = Tile.newTile(tileType);
 	}
 
 	private Tile[][] baseRotate() {
@@ -138,12 +142,18 @@ public class World {
 	 */
 	public void initializeRotation(int dir) {
 		rotateDir = dir;
+		Game.getLevel().changeScore(-100);
 	}
 
 	public void tick() {
 		ableToRotate(true);
 		for (int i = 0; i < blobs.size(); i++) {
 			blobs.get(i).tick();
+			if(blobs.get(i).reachedEnd()) {
+				blobs.remove(i);
+				i--;
+				continue;
+			}
 		}
 		if (rotateDir != -1) {
 			rotation += (rotateDir == 0) ? -10 : 10;
@@ -183,6 +193,64 @@ public class World {
 		for (int i = 0; i < blobs.size(); i++) {
 			blobs.get(i).render();
 		}
+	}
+	
+	public String stringify() {
+		String res = "";
+		
+		for(int i=0; i<(width * height); i++) {
+			res += getTile(i%width, i/width).getId();
+			res += " ";
+		}
+		
+		return res;
+	}
+	
+	public void removeBlobAt(int x, int y) {
+		for(int i=0; i<blobs.size(); i++) {
+			Blob b = blobs.get(i);
+			if(b.getX() == x && b.getY() == y) {
+				blobs.remove(i);
+				break;
+			}
+		}
+	}
+	
+	public Blob getBlobAt(int x, int y) {
+		for(int i=0; i<blobs.size(); i++) {
+			Blob b = blobs.get(i);
+			if(b.getX() == x && b.getY() == y) {
+				return b;
+			}
+		}
+		return null;
+	}
+	
+	public Tile getTile(int x, int y) {
+		if(x < 0 || y < 0 || x >= width || y >= height) return Tile.newTile(4);
+		if(getBlobAt(x, y) != null) {
+			return Tile.newTile(Tiles.BLOB);
+		} else {
+			return tiles[x][y];
+		}
+	}
+	
+	public void setTile(int x, int y, Tiles t) {
+		if(x < 0 || y < 0 || x >= width || y >= height) return;
+		if(getBlobAt(x, y) != null) {
+			removeBlobAt(x, y);
+		}
+		if(t == Tiles.BLOB) {
+			setTile(x, y, Tiles.AIR);
+			addBlobAt(x, y);
+		} else {
+			tiles[x][y] = Tile.newTile(t);
+		}
+		checkConnections();
+	}
+	
+	public void addBlobAt(int x, int y) {
+		addBlob(new Blob(x, y, this));
 	}
 
 	public void addBlob(Blob b) {

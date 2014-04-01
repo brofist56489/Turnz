@@ -1,3 +1,50 @@
+Way to cancel connection...
+
+Waiting for player thing redo.
+
+Basic sounds
+
+MOAR LEVELS (at least better ones)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 public static final long BIG_NUMBER_YOU_DEFINE = Long.MAX_VALUE;
 

@@ -27,7 +27,7 @@ public class Logger {
 	}
 
 	Log<String, InfoLevel> logger = (String s, InfoLevel il) -> {
-		if(min.equals(ALL) || (il.getLevel() >= min.getLevel()))
+		if((il.getLevel() >= min.getLevel()))
 			System.out.println("[" + il.getString() + "] " + s);
 	};
 

@@ -9,9 +9,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 
-import javax.imageio.ImageIO;
-
-import com.gb.turnz.level.World;
 import com.gb.turnz.util.Constants;
 
 public class ServerConnection extends Connection {
@@ -33,7 +30,7 @@ public class ServerConnection extends Connection {
 	protected void setupConnection() {
 		try {
 			server = new ServerSocket(Constants.PORT);
-			server.setSoTimeout(100000);
+			server.setSoTimeout(1000000);
 			client = server.accept();
 
 			dos = new DataOutputStream(client.getOutputStream());
@@ -63,13 +60,5 @@ public class ServerConnection extends Connection {
 		}
 
 		return "NULL";
-	}
-
-	public void sendWorld(World world) {
-		try {
-			ImageIO.write(world.getImage().getBufferedImage(), "PNG", dos);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }

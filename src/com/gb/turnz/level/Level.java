@@ -1,5 +1,7 @@
 package com.gb.turnz.level;
 
+import java.util.HashMap;
+
 import com.gb.turnz.base.Game;
 import com.gb.turnz.level.creator.CreatorWorld;
 import com.gb.turnz.menu.ScoreMenu;
@@ -23,7 +25,8 @@ public class Level {
 	}
 	
 	public void tick() {
-		world.tick();
+		if(!(world == null))
+			world.tick();
 		boolean won = true;
 		for (int i = 0; i < world.blobs.size(); i++) {
 			if (!world.blobs.get(i).reachedEnd())
@@ -35,11 +38,9 @@ public class Level {
 	}
 	
 	public void win() {
-		String OS = System.getProperty("os.name").toUpperCase();
-//		if(OS.contains("WIN"))
-//			Game.setMenu(new ScoreMenu(Game.getInstance(), 100, 2));
-//		if(OS.contains("MAC"))
-//			Game.setMenu(new ScoreMenu(Game.getInstance(), 0, 2));
+		HashMap<String, Integer> scores = new HashMap<String, Integer>();
+		scores.put(System.getProperty("user.name"), score);
+		Game.setMenu(new ScoreMenu(Game.getInstance(), scores));
 	}
 	
 	public int getScore() {
@@ -57,6 +58,10 @@ public class Level {
 	public void setWorld(String world) {
 		this.world = new World(world);
 		this.world.checkConnections();
+	}
+	
+	public void setWorld(World world) {
+		this.world = world;
 	}
 
 	public void setToCreatorWorld() {

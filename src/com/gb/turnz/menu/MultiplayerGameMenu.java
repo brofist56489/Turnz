@@ -7,4 +7,7 @@ public class MultiplayerGameMenu extends GameMenu {
 		super(menu);
 	}
 
+	public void switchedTo() {
+		
+	}
 }

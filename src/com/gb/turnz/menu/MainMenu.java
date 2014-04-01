@@ -2,11 +2,17 @@ package com.gb.turnz.menu;
 
 import com.gb.turnz.base.Game;
 import com.gb.turnz.graphics.Font;
+import com.gb.turnz.graphics.Image;
 import com.gb.turnz.graphics.ImageManager;
 import com.gb.turnz.level.creator.LevelCreatorToolMenu;
 
 public class MainMenu extends Menu {
 
+	static {
+		ImageManager.addImage("/textures/turnzMenu3.png", "menuBorder");
+		ImageManager.addImage("/textures/turnzTitle.png", "menuTitle");
+	}
+	
 	public MainMenu(Game game) {
 		super(game);
 		Font.setScale(2);
@@ -20,8 +26,6 @@ public class MainMenu extends Menu {
 	}
 
 	private void init() {
-		ImageManager.addImage("/textures/turnzMenu.png", "menuImage");
-		addObject(new MenuObject.MenuImage("menuImage", 0, 0));
 		addObject(new MenuObject.Button(Font.getScreenCenterX("Play"), 200, "Play") {
 			public void onClick() {
 				Game.setMenu(new PlayMenu(menu));
@@ -45,6 +49,11 @@ public class MainMenu extends Menu {
 				System.exit(1);
 			}
 		});
-
+	}
+	
+	public void render() {
+		super.render();
+		
+		ImageManager.render("menuTitle", Image.getScreenCenterX("menuTitle"), 60, 0);
 	}
 }

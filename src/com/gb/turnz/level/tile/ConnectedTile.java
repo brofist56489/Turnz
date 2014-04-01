@@ -48,6 +48,8 @@ public class ConnectedTile extends Tile {
 
 	public void checkConnection(int x, int y) {
 		World world = Game.getLevel().getWorld();
+		if(world == null) return;
+		
 		boolean u = (world.getTile(x, y - 1).getId() == id);
 		boolean r = (world.getTile(x + 1, y).getId() == id);
 		boolean l = (world.getTile(x - 1, y).getId() == id);
