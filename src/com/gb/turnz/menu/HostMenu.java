@@ -13,10 +13,11 @@ public class HostMenu extends Menu {
 	}
 	
 	private void init() {
-		addObject(new MenuObject.Text("Waiting for other player", Font.getScreenCenterX("Waiting for other player"), 150));
+		addObject(new MenuObject.Text("Waiting for", Font.getScreenCenterX("Waiting for"), 150));
+		addObject(new MenuObject.Text("other player...", Font.getScreenCenterX("other player..."), 190));
 		
 		String ip = ServerConnection.getExternalIp();
-		addObject(new MenuObject.Text(ip, Font.getScreenCenterX(ip), 200));
+		addObject(new MenuObject.Text(ip, Font.getScreenCenterX(ip), 240));
 		
 		MultiplayerLevel level = (MultiplayerLevel) Game.getLevel();
 		level.setConnection(new ServerConnection((ServerConnection c) -> {

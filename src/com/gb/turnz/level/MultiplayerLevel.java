@@ -51,6 +51,10 @@ public class MultiplayerLevel extends Level {
 		}
 	}
 	
+	public void clearScores() {
+		scores = new HashMap<String, Integer>();
+	}
+	
 	public void setOtherScore(String name, int score) {
 		recvClientScore = true;
 		connection.setCallback((conn) -> {});

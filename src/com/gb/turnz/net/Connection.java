@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import com.gb.turnz.base.Game;
 import com.gb.turnz.level.World;
+import com.gb.turnz.menu.MainMenu;
 import com.gb.turnz.util.Constants;
 import com.gb.turnz.util.Logger;
 
@@ -29,6 +30,8 @@ public abstract class Connection implements Runnable {
 		try {
 			return dis.readUTF();
 		} catch (IOException e) {
+			close();
+			Game.setMenu(new MainMenu(Game.getInstance()));
 			running = false;
 		}
 		return "";
@@ -38,6 +41,8 @@ public abstract class Connection implements Runnable {
 		try {
 			dos.writeUTF(data);
 		} catch (IOException e) {
+			close();
+			Game.setMenu(new MainMenu(Game.getInstance()));
 			running = false;
 		}
 	}
@@ -69,7 +74,8 @@ public abstract class Connection implements Runnable {
 			return null;
 		running = true;
 		Thread thr = new Thread(this, "CONNECTION");
-		setCallback((conn) -> {});
+		setCallback((conn) -> {
+		});
 		thr.start();
 		return this;
 	}
@@ -83,8 +89,8 @@ public abstract class Connection implements Runnable {
 
 		while (running) {
 			callback.call(this);
-		}		
-		
+		}
+
 		Game.getLogger().log("CONNECTION CLOSED", Logger.WARNING);
 	}
 

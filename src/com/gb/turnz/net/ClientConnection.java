@@ -5,10 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import javax.imageio.ImageIO;
-
-import com.gb.turnz.graphics.Image;
-import com.gb.turnz.level.World;
 import com.gb.turnz.util.Constants;
 
 public class ClientConnection extends Connection {

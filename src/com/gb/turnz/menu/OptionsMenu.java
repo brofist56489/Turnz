@@ -32,16 +32,16 @@ public class OptionsMenu extends Menu {
 				Game.setMenu(parentMenu);
 			}
 		});
-		addObject(new MenuObject.Option(26, 100, 300, (int) (Font.getScale() * 10), "SFX", "On", "Off", false) {
-			public void apply() {
-				Game.setSFX(active);
-			}
-		});
-		addObject(new MenuObject.Option(26, 130, 300, (int) (Font.getScale() * 10), "Music", "On", "Off", false) {
-			public void apply() {
-				Game.setMusic(active);
-			}
-		});
+//		addObject(new MenuObject.Option(26, 100, 300, (int) (Font.getScale() * 10), "SFX", "On", "Off", false) {
+//			public void apply() {
+//				Game.setSFX(active);
+//			}
+//		});
+//		addObject(new MenuObject.Option(26, 130, 300, (int) (Font.getScale() * 10), "Music", "On", "Off", false) {
+//			public void apply() {
+//				Game.setMusic(active);
+//			}
+//		});
 
 		addObject(new MenuObject.Text("Host Port:", 26, 160));
 		port = new MenuObject.TextBox(226, 160, 5);

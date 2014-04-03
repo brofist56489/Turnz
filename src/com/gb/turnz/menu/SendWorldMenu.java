@@ -18,6 +18,7 @@ public class SendWorldMenu extends Menu {
 	}
 	
 	public void switchedTo() {
+		((MultiplayerLevel) Game.getLevel()).clearScores();
 		Game.getLogger().log("Sending World", Logger.SEVERE);
 		new Thread(() -> {
 			((MultiplayerLevel) Game.getLevel()).getConnection().sendWorld(Game.getLevel().getWorld());
